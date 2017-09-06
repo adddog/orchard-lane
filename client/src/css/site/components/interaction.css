@@ -1,0 +1,52 @@
+@import "vars/colors";
+@import "vars/sizes";
+@import "vars/transitions";
+
+%media-tile-hover--shadow {
+  box-shadow: inset 0px 0px 27px 0px var(--drop-shadow-2);
+}
+
+%media-tile-hover {
+  position: absolute;
+  content: '';
+  pointer-events: none;
+  top: 0;
+  left: 0;
+  outline: 1px dashed rgba(255, 255, 255, 0.5);
+  /*http://www.cssmatic.com/box-shadow*/
+  outline-offset: -4px;
+}
+
+%modal-choice {
+  position: absolute;
+  pointer-events: none;
+  content: '';
+  top: 0;
+  left: 0;
+  opacity: 0;
+  outline: 1px dashed var(--c-icons--selected);
+  outline-offset: 0px;
+  transition: outline-offset 0.1s ease-out-sine, opacity 0.1s ease-out-sine;
+}
+
+%modal-choice-hover {
+  position: absolute;
+  opacity: 1;
+  pointer-events: none;
+  content: '';
+  top: 0;
+  left: 0;
+  outline: 1px dashed var(--c-icons--selected);
+  outline-offset: -4px;
+  transition: outline-offset 0.1s ease-out-sine, opacity 0.1s ease-out-sine;
+}
+
+%icon-confirm--yes {
+  color: var(--c-green);
+  transition: var(--t-icons), padding-bottom 0.15s ease-out-sine;
+}
+
+%icon-confirm--no {
+  color: var(--c-red);
+  transition: var(--t-icons), padding-bottom 0.15s ease-out-sine;
+}

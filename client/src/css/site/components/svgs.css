@@ -1,0 +1,10 @@
+@svg-load logo url(schoold_logo.svg) {
+}
+
+%logo{
+  position: relative;
+  width: var(--header-logo-width);
+  height: calc(var(--header-logo-width) * 0.2677);
+    background: svg-inline(logo);
+  background-repeat: no-repeat;
+}

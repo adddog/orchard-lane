@@ -1,0 +1,51 @@
+:root{
+    --speed: 0.15s;
+    --t-icons: color 0.2s ease-out-sine;
+}
+
+.modalEnter,
+.modalAppear {
+    opacity: 0.01;
+    transform-origin: 50% 0%;
+    transform: perspective(800px) rotateX(-90deg);
+    transition: all var(--speed) ease-in-sine;
+}
+.modalEnterActive,
+.modalAppearActive {
+    opacity: 1;
+    transform-origin: 50% 0%;
+    transform: perspective(800px) rotateX(0deg);
+    transition: all var(--speed) ease-in-sine;
+}
+
+.modalLeave {
+    opacity: 1;
+    transition: opacity var(--speed) ease-in-sine;
+}
+
+.modalLeaveActive {
+    transition: opacity var(--speed) ease-out-sine;
+    opacity: 0.01;
+}
+
+
+.fadeEnter,
+.fadeAppear {
+    opacity: 0.01;
+    transition: opacity var(--speed) ease-in-sine;
+}
+.fadeEnterActive,
+.fadeAppearActive {
+    opacity: 1;
+    transition: opacity var(--speed) ease-in-sine;
+}
+
+.fadeLeave {
+    opacity: 1;
+    transition: opacity var(--speed) ease-in-sine;
+}
+
+.fadeLeaveActive {
+    transition: opacity var(--speed) ease-out-sine;
+    opacity: 0.01;
+}

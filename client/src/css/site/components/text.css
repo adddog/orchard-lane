@@ -1,0 +1,16 @@
+@import "vars/colors";
+@import "vars/sizes";
+
+%instruction {
+  font-size: var(--fs-desc);
+  color: var(--c-grey-darker);
+  user-select:none;
+  pointer-events: none;
+}
+
+%error {
+  font-size: var(--fs-desc);
+  color:var(--c-red);
+  user-select:none;
+  pointer-events: none;
+}

@@ -1,0 +1,7 @@
+.hamburger-inner {
+  background-color: $c-white;
+  &:before,
+  &:after {
+    background-color: $c-white;
+  }
+}

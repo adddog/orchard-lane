@@ -1,0 +1,38 @@
+@import 'normalize.css';
+@import 'reset-css';
+@import "vars/colors";
+@import "vars/sizes";
+
+body {
+    font-family: var(--ff-base);
+    font-size: var(--fs-base);
+    color: var(--c-grey-darkest);
+    background-color: var(--c-grey);
+    -webkit-font-smoothing: antialiased;
+}
+
+select,
+textarea,
+input-placeholder {
+    color: var(--c-grey-dark);
+}
+
+input:-webkit-autofill {
+    -webkit-box-shadow: 0 0 0px 1000px white inset;
+}
+
+button:focus {
+    outline: 0 !important;
+}
+
+h2 {
+    font-size: var(--fs-title);
+}
+
+button {
+}
+
+* {
+    font-family: var(--ff-base);
+    box-sizing: border-box;
+}

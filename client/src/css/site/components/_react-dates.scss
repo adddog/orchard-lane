@@ -1,0 +1,100 @@
+$numberWidth: 24px;
+
+.CalendarMonthGrid,
+.DayPicker {
+  background: transparent;
+}
+.DayPicker--horizontal {
+  box-shadow: none !important;
+}
+.DayPickerNavigation--horizontal {
+  top: 7px !important;
+}
+.DayPickerNavigation__prev {
+  left: 0 !important;
+  top: 0px !important;
+}
+.DayPickerNavigation__next {
+  right: 0 !important;
+  top: 0px !important;
+}
+
+.transition-container,
+.CalendarMonthGrid {
+  width: auto !important;
+}
+.CalendarMonth {
+  padding: 0 12px !important;
+}
+.CalendarMonth__caption {
+  padding: 0 0 calc(#{$numberWidth * 1.3}) !important;
+}
+
+/* WE OVERIDE AND MAKE THIS SIGNIFY THERE IS DATA ON THESE DATES */
+.CalendarDay--blocked {
+  position: relative;
+  /* &:before {
+    position: absolute;
+    display: block !important;
+    content: '';
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+      to right bottom,
+      $c-green 50%,
+      $c-cyan-blue 50%
+    ) !important;
+  } */
+}
+.CalendarDay--blocked-calendar {
+  color: $c-white;
+  &:before {
+    display: none;
+  }
+}
+.CalendarDay--blocked-out-of-range {
+  color: $c-grey-dark !important;
+  cursor: not-allowed;
+  button {
+    cursor: not-allowed !important;
+  }
+  &:before {
+    display: none !important;
+  }
+}
+.CalendarDay--after-hovered-start,
+.CalendarDay--hovered-span,
+.CalendarDay--selected-span {
+  background: rgb(117, 193, 240) !important;
+  border: 1px double $c-cyan-blue !important;
+}
+
+.DayPicker__week-header {
+  top: 42px !important;
+  @for $i from 0 through 20 {
+    &:nth-child(#{$i}) {
+      left: calc(#{$numberWidth} * (8 * #{$i - 1})) !important;
+    }
+  }
+  /* &:nth-child(2) {
+  left: calc(#{$numberWidth} * 8) !important;
+} */
+}
+.DayPicker__week-header {
+  li {
+    width: $numberWidth !important;
+  }
+}
+.CalendarDay {
+  width: $numberWidth !important;
+  height: $numberWidth !important;
+}
+
+.CalendarDay--hovered,
+.CalendarDay--selected-start,
+.CalendarDay--selected-end {
+  background: $c-cyan-blue !important;
+  border: 1px double $c-cyan-blue !important;
+}

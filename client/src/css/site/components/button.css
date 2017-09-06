@@ -1,0 +1,44 @@
+@import "vars/colors";
+
+%button {
+  position: relative;
+  cursor: pointer;
+  display: flex;
+  white-space: nowrap;
+  justify-content: center;
+  align-items: center;
+  padding: 1em 0.8em 1em 0.8em;
+  border-radius: 4px;
+  background-color: var(--c-cyan-blue);
+
+  transition: background-color 0.2s ease-out-sine;
+
+  &:hover {
+    background-color: color(var(--c-cyan-blue) l(70%));
+  }
+
+  &--small {
+    height: auto;
+  }
+
+  &--positive {
+    background-color: var(--c-green);
+    &:hover {
+      background-color: color(var(--c-green) l(70%));
+    }
+  }
+
+  &--error {
+    background-color: var(--c-red);
+    &:hover {
+      background-color: color(var(--c-red) l(70%));
+    }
+  }
+
+  &--basic {
+    background-color: transparent;
+    &:hover {
+      background-color: transparent;
+    }
+  }
+}

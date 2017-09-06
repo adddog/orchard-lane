@@ -1,0 +1,15 @@
+@import "vars/colors";
+
+%setting-label {
+  display: flex;
+  align-items: center;
+  span {
+    white-space: nowrap;
+    padding-right: 6px;
+  }
+}
+
+%setting-label--selected{
+  /*padding-left: 2em;
+  border-left: 3px solid var(--c-grey-darkest);*/
+}

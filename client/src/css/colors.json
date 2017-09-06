@@ -1,0 +1,26 @@
+{
+  "colors":
+  {
+    "white": "rgb(255, 255, 255)",
+    "black": "rgb(0, 0, 0)",
+    "greyLight": "#fafafa",
+    "grey": "#eeeeee",
+    "greyDark": "rgb(110,110,110)",
+    "greyDarker": "#2b2b2b",
+    "greyDarkest": "#222",
+    "text": "#fff",
+    "icons": "#c9c9c9",
+    "cyanBlue": "#42aaea",
+    "coral": "rgb(245, 105, 106)",
+    "red": "rgb(240, 60, 46)",
+    "yellow": "#fcde72",
+    "green": "#60d890",
+
+    "brandPrimary": "rgb(240, 240, 240)",
+    "brandSecondary": "rgb(85, 85, 85)",
+    "light": "white",
+
+    "dropShadow": "rgba(0, 0, 0, .25)",
+    "boxshadowColor": "rgba(0, 0, 0, 0.12)"
+  }
+}
