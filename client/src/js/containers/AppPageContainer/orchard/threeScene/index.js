@@ -1,4 +1,5 @@
 import { isObject, values, keys, pick } from "lodash"
+import Model from "orchardModels/mapDataModel"
 import Walls from "./walls"
 import Floor from "./floor"
 import * as THREE from "three"
@@ -21,32 +22,44 @@ export function polarToVector3(lon, lat, radius, vector) {
   return vector
 }
 
-const OrchardLane = (threeScene, Model) => {
-  const { DataObject } = Model
+const OrchardLane = threeScene => {
+  const { mapData } = Model
+  const rawData = mapData.get("plotPaths")
+  console.log(rawData)
+
+  if (!mapData.size) {
+    throw new Error(`Model hasn't loaded`)
+  }
 
   threeScene.start()
+
+  threeScene.scene.setHandlers({
+    onWallClicked: mesh => {
+      if(mesh){
+        if (mesh.object.userData && mesh.object.userData.videoId) {
+          const totalFaces = mesh.object.geometry.faces.length
+          Model.updateValue("videoId", mesh.object.userData.videoId)
+          Model.updateValue("plotterProgress", Math.floor(mesh.faceIndex / totalFaces))
+        }
+      }
+    },
+  })
+
   const { scene } = threeScene.scene.renderingContext
   const material = new THREE.MeshBasicMaterial({
     color: 0xff0000,
     side: THREE.DoubleSide,
   })
 
-  var group = new THREE.Group();
+  var group = new THREE.Group()
   scene.add(group)
 
   const floor = Floor()
   floor.rotateX(Math.PI / 2)
   floor.position.y = -3
   group.add(floor)
-  const walls = Walls(
-    values(DataObject.mapData).map(({ path, x, y }, i) => ({
-      points: path.nodes,
-      position: {
-        x: x,
-        y: y,
-      },
-    }))
-  ).map(({ mesh }) => {
+  const walls = Walls(mapData.get("wallData"))
+  .map(({ mesh }) => {
     group.add(mesh)
   })
 
@@ -56,14 +69,14 @@ const OrchardLane = (threeScene, Model) => {
 
   Model.observable.on("plotterProgress", (value, prev) => {
     const currentPlotterPoint = Model.currentPlotterPoint
-    if(currentPlotterPoint){
+    if (currentPlotterPoint) {
       group.position.x = -currentPlotterPoint.y
       group.position.y = -4
       group.position.z = -currentPlotterPoint.x
     }
     //threeScene.scene.renderingContext.position = cameraPosition
     //threeScene.scene.updateConfig({
-      //cameraPosition: cameraPosition,
+    //cameraPosition: cameraPosition,
     //})
   })
   /*

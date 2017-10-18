@@ -1,6 +1,10 @@
 import './index.scss';
 import './index.css';
 
+import {
+    INIT_RUN,
+} from 'actions/actionTypes';
+
 import { throttle } from 'lodash'
 import React from 'react'
 import ReactDOM from 'react-dom'
@@ -34,6 +38,7 @@ const throttleResize = throttle(() => {
 }, 400)
 window.addEventListener('resize', () => throttleResize())
 
+store.dispatch({type: INIT_RUN})
 
 ReactDOM.render(
   <Provider store={store}>

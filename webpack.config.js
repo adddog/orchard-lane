@@ -19,12 +19,14 @@ module.exports = env => {
   const DefineENV = new webpack.DefinePlugin(
     Object.assign({}, require("dotenv").config(), {
       "process.env.IPEDS": "'9228723'",
-      "process.env.ASSET_URL": "'https://storage.googleapis.com/orchard-lane/'",
+      "process.env.ASSET_URL":
+        "'https://storage.googleapis.com/orchard-lane/'",
       "process.env.CMS_API_HOST": "'http://localhost:3000/'",
       "process.env.NODE_ENV": isProd
         ? "'production'"
         : "'development'",
       "process.env.DEV": isDev,
+      "process.env.OFFLINE": true,
     })
   )
 
@@ -75,13 +77,7 @@ module.exports = env => {
   return {
     entry: {
       app: "./js/index.jsx",
-      vendor: [
-        "react",
-        "redux",
-        "redux-saga",
-        "immutable",
-        "lodash",
-      ],
+      vendor: ["react", "redux", "redux-saga", "immutable", "lodash"],
     },
     node: {
       dns: "mock",
@@ -121,6 +117,45 @@ module.exports = env => {
         resolve(`${constants.JS_SRC_DIR}`, "selectors"),
         resolve(`${constants.JS_SRC_DIR}`, "sagas"),
         resolve(`${constants.JS_SRC_DIR}`, "utils"),
+
+        resolve(
+          join(
+            `${constants.JS_SRC_DIR}`,
+            "containers",
+            "AppPageContainer"
+          ),
+          "orchard"
+        ),
+
+        resolve(
+          join(
+            `${constants.JS_SRC_DIR}`,
+            "containers",
+            "AppPageContainer",
+            "orchard"
+          ),
+          "threeScene"
+        ),
+
+        resolve(
+          join(
+            `${constants.JS_SRC_DIR}`,
+            "containers",
+            "AppPageContainer",
+            "orchard"
+          ),
+          "videoPlayer"
+        ),
+
+        resolve(
+          join(
+            `${constants.JS_SRC_DIR}`,
+            "containers",
+            "AppPageContainer",
+            "orchard"
+          ),
+          "orchardModels"
+        ),
       ],
       /*
 alias: {

@@ -8,12 +8,14 @@ import { withRouter } from 'react-router-dom'
 const mapStateToProps = () => {
     return (state, ownProps) => {
         return {
+            mapData:state.mapData,
             ...ownProps,
         };
     };
 };
 
 const mapDispatchToProps = (dispatch, props) => ({
+
 });
 
 const mergeProps = (stateProps, dispatchProps, ownProps) => {

@@ -1,7 +1,9 @@
 import { combineReducers } from 'redux';
+import mapData from './mapData';
 import { createResponsiveStateReducer } from 'redux-responsive';
 
 const dashApp = combineReducers({
+  mapData,
   browser: createResponsiveStateReducer({
     mobile: 360,
     phablet: 540,

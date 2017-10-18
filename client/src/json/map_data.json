@@ -2,24 +2,36 @@
   "R4-XIR7b-Qo": {
     "x":10,
     "y":10,
+    "videoData":{
+      "startTime":39,
+      "endTime":701
+    },
     "points": [
       {
-        "val": 0.1,
-        "time": 1200
+        "val": 1,
+        "time": 0
+      },
+      {
+        "val": 0.75,
+        "time": 120000
       },
       {
         "val": 0.3,
-        "time": 3000
+        "time": 357000
       },
       {
-        "val": 0.6,
-        "time": 5000
+        "val": 0,
+        "time": 662000
       }
     ]
   },
   "3DC9Y2BqyuU": {
-    "x":10,
-    "y":10,
+    "x":17,
+    "y":12,
+    "videoData":{
+      "startTime":39,
+      "endTime":701
+    },
     "points": [
       {
         "val": 0.1,

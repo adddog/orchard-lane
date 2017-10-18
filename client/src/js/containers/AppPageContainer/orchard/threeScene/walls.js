@@ -6,7 +6,6 @@ const xhr = Q.promisify(Xhr)
 
 const Wall = (d, Height, numPoints = 20) => {
   const { points, position } = d
-  console.log(points);
   var curve1 = new THREE.SplineCurve(
     points.map(p => new THREE.Vector2(p.x, p.y))
   )
@@ -25,14 +24,14 @@ const Wall = (d, Height, numPoints = 20) => {
         new THREE.Vector3(
           geometry.vertices[i].y,
           0,
-          geometry.vertices[i].x,
+          geometry.vertices[i].x
         )
       )
       positions.push(
         new THREE.Vector3(
           geometry.vertices[i].y,
           Height,
-          geometry.vertices[i].x,
+          geometry.vertices[i].x
         )
       )
     }
@@ -58,15 +57,17 @@ const Wall = (d, Height, numPoints = 20) => {
     geometry,
     new THREE.MeshBasicMaterial({
       color: Math.random() * 0xffffff,
+      wireframe: true,
       side: THREE.DoubleSide,
     })
   )
+  m.userData = d
   m.drawMode = THREE.TriangleStripDrawMode
   //m.rotateZ(Math.PI)
   m.position.set(
     position.y + geometry.boundingBox.max.x,
     -Height,
-    position.x + geometry.boundingBox.max.z,
+    position.x + geometry.boundingBox.max.z
     //position.y + geometry.boundingBox.max.y / 2
   )
   return {

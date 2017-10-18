@@ -5,174 +5,104 @@ import Q from "bluebird"
 import Xhr from "xhr-request"
 const xhr = Q.promisify(Xhr)
 import ThreeScene from "orchard-lane-three"
-import MediaPlayer from "orchard-lane-media-player"
-import Scene from "./three"
-import OrchardLaneMap from "./map"
-import Model from "./model"
+import VideoPlayer from "videoPlayer"
+
+import Scene from "threeScene"
+import OrchardLane from "./orchard"
 
 import styles from "./AppPageContainer.css"
 
 export default class AppPageContainer extends Component {
-  static propTypes = {}
+  static propTypes = {
+    mapData: PropTypes.object.isRequired,
+  }
 
   constructor(props) {
     super(props)
   }
 
   componentDidMount() {
+    const { mapData } = this.props
 
-    const ITAG = "133"
-    const { ASSET_URL } = process.env
+    //MapDataModel.mapData = mapData
 
-    Model.start().then(DataObject => {
+    /*OrchardLaneMap.init()
 
-      Model.init({
-        videoId: DataObject.videoIds[0],
-      })
-      OrchardLaneMap.setModel(Model)
-
-      return MediaPlayer(
-        DataObject.videoIds.map(id => `${ASSET_URL}${id}_${ITAG}.json`),
-        {
-          assetUrl: ASSET_URL,
-        }
-      ).then(({ mediaSource, manifests, addFromReference }) => {
-
-        DataObject.manifests = manifests
-
-        mediaSource.endingSignal.add(() => {})
-
-        let _previousTime = null
-        mediaSource.timeUpdateSignal.add(t => {
-          if(_previousTime !== t){
-            Model.updateValue(
-              "plotterProgress",
-              OrchardLaneMap.getPlotProgress(t * 1000)
-            )
-          }
-          _previousTime = t
-        })
-
-        /*mediaSource.videoWaitingSignal.add(()=>{
-          console.log("Waiting");
-        })
-
-        mediaSource.videoPausedSignal.add(()=>{
-          console.log("videoPausedSignal");
-        })*/
-
-        addFromReference(manifests[0], [0, 2])
-
-        this._startScene(mediaSource.el, Model)
-      })
-      .catch(err=>{
-        this._startScene(this.refs.videoEl, Model)
-        let _t = 0
-        setInterval(()=>{
-          const nextPoint = OrchardLaneMap.getPlotProgress(_t)
-          if(nextPoint){
-          Model.updateValue(
-              "plotterProgress",
-              nextPoint
-            )
-
-          }
-          _t += 250
-        }, 1000)
-
-      })
+    VideoPlayer().then(mediaPlayer => {
+      const { mediaSource } = mediaPlayer
+      this._startScene(mediaSource.el)
     })
-    /*const DataObject = {
-      videoIds: null,
-      plotterPaths: null,
-      videoManifests: null,
-    }
-    Model.setDataObject(DataObject)
-
-    xhr(`json/videos.json`, { json: true }).then(IDS => {
-      const ITAG = "133"
-      const { ASSET_URL } = process.env
-
-      DataObject.videoIds = IDS
-      Model.init({
-        videoId: IDS[0],
-      })
-      OrchardLaneMap.setModel(Model)
-
-      return Q.map(IDS, id =>
-        xhr(`json/${id}.json`, {
-          json: true,
-        }).then(d => {
-          d = d.map(p => {
-            p.x *= 0.1
-            p.y *= 0.1
-            return p
-          })
-          d.shift()
-          console.log(d);
-          return {
-            id: id,
-            data: d,
-          }
-        })
-      ).then(plotters => {
-        const Plots = {}
-        plotters.forEach(
-          plot => (Plots[plot.id] = find(plotters, {id:plot.id}).data)
-        )
-        DataObject.plotterPaths = Plots
-
-        return MediaPlayer(
-          IDS.map(id => `${ASSET_URL}${id}_${ITAG}.json`),
-          {
-            assetUrl: ASSET_URL,
-          }
-        ).then(({ mediaSource, manifests, addFromReference }) => {
-          //document.body.appendChild(mediaSource.el)
-
-          DataObject.manifests = manifests
-
-          mediaSource.endingSignal.add(() => {})
-
-          mediaSource.timeUpdateSignal.add(t => {
-
-            Model.updateValue(
-              "plotterProgress",
-              OrchardLaneMap.getPlotProgress(t*1000)
-            )
-          })
-
-          addFromReference(manifests[0], [0, 2])
-
-          Scene(
-            ThreeScene(mediaSource.el, this.refs.three, {
-              hide: true,
-            }),
-            Model
-          )
-        })
-      })
-    })*/
+    console.log("------");
+    console.log(process.env.OFFLINE);
+    if (process.env.OFFLINE) {
+      this._startScene(this.refs.videoEl)
+      let _t = 0
+      setInterval(() => {
+        const nextPoint = OrchardLaneMap.getPlotProgress(_t)
+        if (nextPoint) {
+          Model.updateValue("plotterProgress", nextPoint)
+        }
+        _t += 250
+      }, 250)
+    }*/
   }
 
-  _startScene(el, Model){
+  _startScene(el) {
     Scene(
-          ThreeScene(el, this.refs.three, {
-            hide: true,
-          }),
-          Model
-        )
+      ThreeScene(el, this.refs.three, {
+        hide: true,
+      })
+    )
+  }
+
+  componentWillReceiveProps(nextProps) {
+    const { mapData } = nextProps
+    if (
+      mapData.get("loadComplete") &&
+      mapData.get("loadComplete") !==
+        this.props.mapData.get("loadComplete")
+    ) {
+
+      OrchardLane.start(mapData)
+
+      VideoPlayer.init().then(mediaPlayer => {
+        const { mediaSource } = mediaPlayer
+
+
+        VideoPlayer.start()
+
+        this._startScene(mediaSource.el)
+
+        this.refs.testVideo.appendChild(mediaSource.el)
+      })
+
+      /*console.log("------")
+      console.log(process.env.OFFLINE)
+
+      if (process.env.OFFLINE) {
+        this._startScene(this.refs.videoEl)
+        let _t = 0
+        setInterval(() => {
+          const nextPoint = OrchardLaneMap.getPlotProgress(_t)
+          if (nextPoint) {
+            Model.updateValue("plotterProgress", nextPoint)
+          }
+          _t += 250
+        }, 250)
+      }*/
+    }
   }
 
   componentDidUpdate() {}
 
   _render() {
+    //<video ref="videoEl" src="orchardlane.mp4" />
     return (
       <main
         data-ui-ref="AppContentContainer"
         className={classnames(styles.root)}
       >
-        <video ref="videoEl" src="orchardlane.mp4"></video>
+
         <div
           ref="three"
           className={classnames([
@@ -181,11 +111,19 @@ export default class AppPageContainer extends Component {
           ])}
           data-ui-ref="AppContent"
         />
+        <div
+          ref="testVideo"
+          className={classnames([
+            styles.testVideo,
+          ])}
+        />
       </main>
     )
   }
 
   render() {
+    const { mapData } = this.props
+    if (!mapData.get("raw")) return null
     return this._render()
   }
 }

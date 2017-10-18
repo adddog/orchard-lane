@@ -11,3 +11,5 @@ client/dist/fonts/
 client/dist/json/
 client/dist/index.html
 server/static
+
+dev

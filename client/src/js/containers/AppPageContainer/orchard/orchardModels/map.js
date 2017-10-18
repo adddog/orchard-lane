@@ -1,13 +1,20 @@
 import Q from "bluebird"
-import Xhr from "xhr-request"
+import Model from "./mapDataModel"
 
-const xhr = Q.promisify(Xhr)
+/*
+
+PARSER OF INPUTS FOR WORKING WITH MAP.JSON
+
+*/
 
 const mapValues = (val, in_min, in_max, out_min, out_max) =>
   (val - in_min) * (out_max - out_min) / (in_max - in_min) + out_min
 
+/*
+TAKE A PROGRESS VALUE IN MILLISECONDS AND USING THE JSON,
+RETURN A 0-1 OF WHOLE VIDEO
+*/
 const PlotPoints = data => {
-
   let _points = null
   let _nextPoint = null
 
@@ -37,8 +44,6 @@ const PlotPoints = data => {
           val - previousPoint.val
         ) + previousPoint.val
 
-        console.log("svgPlotProgress", svgPlotProgress);
-
       return svgPlotProgress
     }
     return 0
@@ -51,24 +56,25 @@ const PlotPoints = data => {
 }
 
 class OrchardLaneMap {
-  constructor() {
-  }
-
-  setModel(model) {
-    this._plot = PlotPoints(model.DataObject.mapData)
-    const onCoinsChanged = model.observable.on(
-      "videoId",
-      (value, prev) => {
-        this.setActiveVideo(value)
-      }
-    )
-    this.setActiveVideo(model.observable.videoId)
+  start() {
+    if (!Model.mapData) {
+      throw new Error(`Need to set mapData on the Model first`)
+    }
+    this._plot = PlotPoints(Model.mapData.get('raw'))
+    const { observable } = Model
+    const onCoinsChanged = observable.on("videoId", (value, prev) => {
+      this.setActiveVideo(value)
+    })
+    this.setActiveVideo(observable.videoId)
   }
 
   setActiveVideo(id) {
     this._plot.setActive(id)
   }
 
+  /*
+  GET A 0-1, SEE ABOVE
+  */
   getPlotProgress(t) {
     return this._plot.update(t)
   }

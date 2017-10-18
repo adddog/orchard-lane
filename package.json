@@ -61,6 +61,7 @@
     "three-orbit-controls": "^82.1.0",
     "three-orbitcontrols": "^1.2.1",
     "three-pointerlock": "0.0.2",
+    "usfl": "^3.0.1",
     "validator": "^8.1.0"
   },
   "devDependencies": {

@@ -1,4 +1,5 @@
 import { all, call, spawn } from "redux-saga/effects"
+import init from "./init"
 
 /*
 https://github.com/redux-saga/redux-saga/issues/760
@@ -23,8 +24,7 @@ const makeRestartable = saga => {
   }
 }
 
-const rootSagas = [
-].map(makeRestartable)
+const rootSagas = [init].map(makeRestartable)
 
 export default function* root() {
   yield all(rootSagas.map(saga => call(saga)))
