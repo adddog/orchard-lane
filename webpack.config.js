@@ -26,7 +26,7 @@ module.exports = env => {
         ? "'production'"
         : "'development'",
       "process.env.DEV": isDev,
-      "process.env.OFFLINE": true,
+      "process.env.OFFLINE": false,
     })
   )
 

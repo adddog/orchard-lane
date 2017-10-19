@@ -1,5 +1,5 @@
 import Q from "bluebird"
-import { ASSET_URL,JSON_URL } from "utils/utils"
+import { ITAG, ASSET_URL, JSON_URL, INIT_JSON_URL } from "utils/utils"
 import {
     call,
     cancel,
@@ -23,11 +23,11 @@ import { JsonApiRequest } from "./api"
 //**** API CALLS
 //**-----------
 const RUN = () => {
-    return JsonApiRequest(`${JSON_URL}run.json`)
+    return JsonApiRequest(`${INIT_JSON_URL}run.json`)
 }
 
 const MAP_DATA = () => {
-    return JsonApiRequest(`${JSON_URL}map_data.json`)
+    return JsonApiRequest(`${INIT_JSON_URL}map_data.json`)
 }
 
 /*
@@ -35,7 +35,7 @@ The videoId jsons
 */
 const VIDEO_PLOT_PATHS = videoIds => {
     return Q.map(videoIds, id =>
-        JsonApiRequest(`${JSON_URL}${id}.json`).then(d => {
+        JsonApiRequest(`${INIT_JSON_URL}${id}.json`).then(d => {
             d.nodes.forEach(p => {
                 /*
               !!
@@ -90,10 +90,12 @@ function* doInit(action) {
         payload: plotPaths,
     })
 
-    const { itag } = yield select(state => state.mapData.get('runSettings'))
+    const { itag } = yield select(state =>
+        state.mapData.get("runSettings")
+    )
     const videoManifests = yield call(
         VIDEO_MANIFESTS,
-        videoIds.map(id => `${JSON_URL}${id}_${itag}.json`)
+        videoIds.map(id => `${JSON_URL}${id}_${itag || ITAG}.json`)
     )
 
     yield put({

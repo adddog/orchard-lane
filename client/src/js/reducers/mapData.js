@@ -12,7 +12,7 @@ import { keys, assign, pick, find } from "lodash"
 const initialState = new Map({
   loadComplete: null,
 
-  runSettings: null,
+  runSettings: {},
 
   raw: null,
   videoIds: null,
@@ -62,12 +62,11 @@ export default function mapData(state = initialState, action) {
       return state.set(
         "videoManifests",
         payload.map(videoManifest => {
+
           trimSidx(
             state.get("raw")[videoManifest.videoId].videoData,
             videoManifest
           )
-
-          console.log(videoManifest);
 
           return {
             ...videoManifest,

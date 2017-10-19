@@ -65,16 +65,12 @@ export default class AppPageContainer extends Component {
 
       OrchardLane.start(mapData)
 
-      VideoPlayer.init().then(mediaPlayer => {
-        const { mediaSource } = mediaPlayer
+      const mediaPlayer = VideoPlayer.init()
+      VideoPlayer.start()
+      this.refs.testVideo.appendChild(mediaPlayer.mediaSource.el)
 
+      this._startScene(mediaPlayer.mediaSource.el)
 
-        VideoPlayer.start()
-
-        this._startScene(mediaSource.el)
-
-        this.refs.testVideo.appendChild(mediaSource.el)
-      })
 
       /*console.log("------")
       console.log(process.env.OFFLINE)

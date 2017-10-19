@@ -6,6 +6,17 @@ import { keys, assign, find } from "lodash"
 Create an
 ************/
 
+const createVideoPlaybackModel = (
+  videoId,
+  { startTime, endTime }
+) => ({
+  videoId,
+  startTime,
+  endTime,
+  currentStartTime: 0,
+  currentTime: 0,
+})
+
 class Model {
   /*
      WE CAN ATTACH LISTENERS TO THIS MODEL AROUND THE APP
@@ -19,11 +30,20 @@ class Model {
           {},
           {
             videoId: "",
+            videoProgress: 0,
             plotterProgress: 0,
           },
           this._mapData.get("runSettings")
         )
       )
+
+      this._videoModel = {}
+      for (const { videoId, videoData } in this._mapData.get("raw")) {
+        this._videoModel[videoId] = createVideoPlaybackModel(
+          videoId,
+          videoData
+        )
+      }
 
       this.currentData = {
         wallData: null,
@@ -40,6 +60,10 @@ class Model {
     this.currentData.wallData = find(this._mapData.get("wallData"), {
       videoId: this.observable.videoId,
     })
+  }
+
+  get videoModel() {
+    return this._videoModel
   }
 
   get mapData() {
@@ -61,8 +85,12 @@ class Model {
   }
 
   get currentVideoManifests() {
+    return this.getCurrentVideoManifests(this.observable.videoId)
+  }
+
+  getCurrentVideoManifests(videoId) {
     return find(this._mapData.get("videoManifests"), {
-      videoId: this.observable.videoId,
+      videoId,
     })
   }
 

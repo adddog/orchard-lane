@@ -1,5 +1,5 @@
 import { isObject, values, keys, pick } from "lodash"
-import Model from "orchardModels/mapDataModel"
+import ThreeModel from "orchardModels/threeModel"
 import Walls from "./walls"
 import Floor from "./floor"
 import * as THREE from "three"
@@ -23,12 +23,12 @@ export function polarToVector3(lon, lat, radius, vector) {
 }
 
 const OrchardLane = threeScene => {
-  const { mapData } = Model
+  const { mapData } = ThreeModel
   const rawData = mapData.get("plotPaths")
   console.log(rawData)
 
   if (!mapData.size) {
-    throw new Error(`Model hasn't loaded`)
+    throw new Error(`ThreeModel hasn't loaded`)
   }
 
   threeScene.start()
@@ -39,7 +39,7 @@ const OrchardLane = threeScene => {
         if (mesh.object.userData && mesh.object.userData.videoId) {
           const totalFaces = mesh.object.geometry.faces.length
           Model.updateValue("videoId", mesh.object.userData.videoId)
-          Model.updateValue("plotterProgress", Math.floor(mesh.faceIndex / totalFaces))
+          //Model.updateValue("plotterProgress", Math.floor(mesh.faceIndex / totalFaces))
         }
       }
     },
@@ -67,8 +67,8 @@ const OrchardLane = threeScene => {
     cameraPosition: { z: 0, x: 0, y: 20 },
   })
 
-  Model.observable.on("plotterProgress", (value, prev) => {
-    const currentPlotterPoint = Model.currentPlotterPoint
+  ThreeModel.observable.on("plotterProgress", (value, prev) => {
+    const currentPlotterPoint = ThreeModel.currentPlotterPoint
     if (currentPlotterPoint) {
       group.position.x = -currentPlotterPoint.y
       group.position.y = -4

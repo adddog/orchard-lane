@@ -1,5 +1,4 @@
-import MapDataModel from "orchardModels/mapDataModel"
-import OrchardLaneMap from "orchardModels/map"
+import OrchardModel from "orchardModels"
 
 class OrchardLane {
   start(mapData) {
@@ -7,8 +6,8 @@ class OrchardLane {
       throw new Error(`Need to set mapData on the Model first`)
     }
 
-    MapDataModel.mapData = mapData
-    OrchardLaneMap.start()
+    this.model = new OrchardModel(mapData)
+    //OrchardLaneMap.start()
 
 
   }
