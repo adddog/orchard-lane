@@ -1,8 +1,11 @@
 import observable from "proxy-observable"
-import { keys, assign, find } from "lodash"
+import { keys, assign, find, last } from "lodash"
 import math from "usfl/math"
 import BaseModel from "./baseModel"
 import VideoModel from "orchardModels/videoModel"
+
+const MAP_OFFSET_X = 10
+const MAP_OFFSET_Y = 10
 
 class ThreeModel extends BaseModel {
   /*
@@ -14,6 +17,13 @@ class ThreeModel extends BaseModel {
       plotterProgress: 0,
       wallData: this._getCurrentWallData(this.currentVideoId),
     })
+
+    VideoModel.observable.on("videoId", value => {
+      this.observable.wallData = this._getCurrentWallData(value)
+      console.log("-----------")
+      console.log(this.observable.wallData)
+      console.log("-----------")
+    })
   }
 
   _getCurrentWallData(videoId) {
@@ -21,24 +31,6 @@ class ThreeModel extends BaseModel {
       videoId,
     })
   }
-
-  /*
-    Get the map data by videoId
-  */
-  get currentVideoData() {
-    return this._mapData.get("raw")[this.currentVideoId]
-  }
-
-  get currentVideoManifests() {
-    return this.getCurrentVideoManifests(this.currentVideoId)
-  }
-
-  getCurrentVideoManifests(videoId) {
-    return find(this._mapData.get("videoManifests"), {
-      videoId,
-    })
-  }
-
   /*
   WHERE IN THE SVH PLOTTER ARE WE
   */
@@ -52,8 +44,8 @@ class ThreeModel extends BaseModel {
       ...this.observable.wallData.points[index],
     }
 
-    o.x += this.observable.wallData.position.x
-    o.y += this.observable.wallData.position.y
+    o.x += MAP_OFFSET_X
+    o.y += MAP_OFFSET_Y
 
     return o
   }
@@ -61,28 +53,47 @@ class ThreeModel extends BaseModel {
   timeUpdate(t) {
     const { wallData } = this.observable
     const { videoCurrentTime } = VideoModel.currentVideo
+    console.log(
+      "videoStartTime",
+      VideoModel.currentVideo.videoStartTime
+    )
+    console.log("videoCurrentTime", videoCurrentTime)
     let _i = 0
-    for (_i; _i < this.currentVideoData.points.length; _i++) {
-      if (_i < this.currentVideoData.points.length - 2) {
-        if (
-          videoCurrentTime < this.currentVideoData.points[_i + 1].time
-        ) {
-          _i
-          break
-        }
+    for (
+      _i;
+      _i < VideoModel.currentVideoData.points.length - 2;
+      _i++
+    ) {
+      if (
+        videoCurrentTime <
+        VideoModel.currentVideoData.points[_i + 1].time
+      ) {
+        _i
+        break
       }
     }
-    const cuepoint = this.currentVideoData.points[_i]
-    const nextCuepoint = this.currentVideoData.points[_i + 1]
+
+    const cuepoint = VideoModel.currentVideoData.points[_i]
+    console.log("--_--")
+    console.log(cuepoint)
+    const nextCuepoint =
+      VideoModel.currentVideoData.points[_i + 1] || {}
+    const nextCuepointTime =
+      nextCuepoint.time ||
+      last(VideoModel.currentVideoData.points).time
 
     const progress =
       (videoCurrentTime - cuepoint.time) /
-      (nextCuepoint.time - cuepoint.time)
+      (nextCuepointTime - cuepoint.time)
 
     this.observable.plotterProgress = math.lerp(
       cuepoint.val,
       nextCuepoint.val,
       progress
+    )
+    console.log(
+      "this.observable.plotterProgress",
+      this.observable.plotterProgress
     )
   }
 

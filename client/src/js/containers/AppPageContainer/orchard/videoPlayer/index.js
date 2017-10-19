@@ -1,6 +1,6 @@
 import { ASSET_URL, JSON_URL } from "utils/utils"
 import MediaPlayer from "orchard-lane-media-player"
-
+import {  last } from "lodash"
 import VideoModel from "orchardModels/videoModel"
 import ThreeModel from "orchardModels/threeModel"
 import OrchardLaneMap from "orchardModels/map"
@@ -30,9 +30,10 @@ class VideoPlayer {
     const { mediaSource } = this._mediaPlayer
     const { observable, currentVideo } = VideoModel
 
+    let _newVideo = false
     observable.on("videoId", (value, prev) => {
-      observable[value].curr
-      this.currentVideoManifest = Model.getCurrentVideoManifest(value)
+      _newVideo = true
+      this.currentVideoManifest = VideoModel.getCurrentVideoManifest(value)
     })
 
     mediaSource.endingSignal.add(() => {
@@ -54,6 +55,10 @@ class VideoPlayer {
       _previousTime = t*/
     })
     mediaSource.segmentAddedSignal.add(t => {
+      if(_newVideo){
+        mediaSource.currentTime = last(VideoModel.playbackTimecodes).toFixed(3)
+      }
+      _newVideo = false
       VideoModel.referenceAdded()
     })
   }

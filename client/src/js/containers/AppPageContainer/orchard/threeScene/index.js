@@ -1,5 +1,7 @@
 import { isObject, values, keys, pick } from "lodash"
 import ThreeModel from "orchardModels/threeModel"
+import VideoModel from "orchardModels/videoModel"
+
 import Walls from "./walls"
 import Floor from "./floor"
 import * as THREE from "three"
@@ -38,7 +40,7 @@ const OrchardLane = threeScene => {
       if(mesh){
         if (mesh.object.userData && mesh.object.userData.videoId) {
           const totalFaces = mesh.object.geometry.faces.length
-          Model.updateValue("videoId", mesh.object.userData.videoId)
+          VideoModel.updateValue("videoId", mesh.object.userData.videoId)
           //Model.updateValue("plotterProgress", Math.floor(mesh.faceIndex / totalFaces))
         }
       }

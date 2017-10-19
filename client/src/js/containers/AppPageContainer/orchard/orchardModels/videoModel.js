@@ -23,6 +23,7 @@ const createVideoPlaybackModel = mapData => {
 }
 
 class VideoModel extends BaseModel {
+
   init(mapData) {
     super.init(mapData)
     this.observable = observable({
@@ -32,9 +33,7 @@ class VideoModel extends BaseModel {
     })
 
     this.observable.on("videoId", value => {
-      this.currentVideo.videoStartTime = this.playbackTimecodes[
-        this.playbackTimecodes.length - 1
-      ]
+      this.observable[value].videoStartTime = last(this.playbackTimecodes)
     })
 
     this.playbackTimecodes = []
@@ -43,7 +42,7 @@ class VideoModel extends BaseModel {
 
   timeUpdate(t) {
     const { videoStartTime } = this.currentVideo
-    if (t > this.currentVideo.referenceStartTime) {
+    /*if (t > this.currentVideo.referenceStartTime) {
       this.currentVideo.referenceStartTime = last(
         this.playbackTimecodes
       )
@@ -51,7 +50,7 @@ class VideoModel extends BaseModel {
         t - this.currentVideo.referenceStartTime
     } else {
       this.currentVideo.referenceTime = t
-    }
+    }*/
     /*console.log(
       "this.currentVideo.referenceStartTime",
       this.currentVideo.referenceStartTime
@@ -67,6 +66,7 @@ class VideoModel extends BaseModel {
   addReference() {}
 
   referenceAdded() {
+    this.currentVideo.referenceStartTime = last(this.playbackTimecodes) || 0
     this.playbackDict.push({
       videoId: this.currentVideo.videoId,
       reference: [...this.currentVideo.currentReference],
@@ -109,6 +109,7 @@ class VideoModel extends BaseModel {
   get currentVideo() {
     return this.observable[this.observable.videoId]
   }
+
 }
 
 const getRefDuration = (currentVideoManifest, currentVideo) => {
