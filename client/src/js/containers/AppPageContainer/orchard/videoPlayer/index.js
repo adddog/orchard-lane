@@ -3,7 +3,6 @@ import {  last } from "lodash"
 import MediaPlayer from "orchard-lane-media-player"
 import VideoModel from "orchardModels/videoModel"
 import ThreeModel from "orchardModels/threeModel"
-import OrchardLaneMap from "orchardModels/orchardLaneMap"
 
 class VideoPlayer {
   init() {
