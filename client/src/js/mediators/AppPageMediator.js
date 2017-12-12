@@ -8,6 +8,7 @@ import { withRouter } from 'react-router-dom'
 const mapStateToProps = () => {
     return (state, ownProps) => {
         return {
+            config:state.config,
             mapData:state.mapData,
             ...ownProps,
         };

@@ -1,6 +1,7 @@
 import observable from "proxy-observable"
 import { keys, assign, find, last } from "lodash"
 import BaseModel from "./baseModel"
+import ThreeModel from "orchardModels/threeModel"
 import { ITAG } from "utils/utils"
 
 const createVideoPlaybackModel = mapData => {
@@ -11,6 +12,7 @@ const createVideoPlaybackModel = mapData => {
       videoId: videoId,
       startTime: raw[videoId].videoData.startTime,
       endTime: raw[videoId].videoData.endTime,
+      initialRotation: raw[videoId].videoData.initialRotation,
       videoStartTime: 0,
       videoCurrentTime: 0,
       videoProgress: 0,
@@ -23,9 +25,9 @@ const createVideoPlaybackModel = mapData => {
 }
 
 class VideoModel extends BaseModel {
-
   init(mapData) {
     super.init(mapData)
+
     this.observable = observable({
       itag: this.mapData.get("runSettings").itag || ITAG,
       videoId: this.currentVideoId,
@@ -33,7 +35,15 @@ class VideoModel extends BaseModel {
     })
 
     this.observable.on("videoId", value => {
-      this.observable[value].videoStartTime = last(this.playbackTimecodes)
+      this.getCurrentVideoManifest(value)
+      const refI = Math.floor(
+        (this._currentVideoManifest.sidx.references.length - 1) *
+          ThreeModel.observable.faceIndex
+      )
+      this.observable[value].currentReference = [refI, refI + 1]
+      this.observable[value].videoStartTime = last(
+        this.playbackTimecodes
+      )
     })
 
     this.playbackTimecodes = []
@@ -59,14 +69,17 @@ class VideoModel extends BaseModel {
       "this.currentVideo.referenceTime",
       this.currentVideo.referenceTime
     )*/
-    this.currentVideo.videoCurrentTime = (t - videoStartTime)
-    this.currentVideo.videoProgress = this.currentVideo.videoCurrentTime / this._currentVideoManifest.duration
+    this.currentVideo.videoCurrentTime = t - videoStartTime
+    this.currentVideo.videoProgress =
+      this.currentVideo.videoCurrentTime /
+      this._currentVideoManifest.duration
   }
 
   addReference() {}
 
   referenceAdded() {
-    this.currentVideo.referenceStartTime = last(this.playbackTimecodes) || 0
+    this.currentVideo.referenceStartTime =
+      last(this.playbackTimecodes) || 0
     this.playbackDict.push({
       videoId: this.currentVideo.videoId,
       reference: [...this.currentVideo.currentReference],
@@ -80,7 +93,11 @@ class VideoModel extends BaseModel {
   /*
     Get the map data by videoId
   */
-  get currentVideoData() {
+  get currentVideoModelData() {
+    return this.observable[this.observable.videoId]
+  }
+
+  get currentRawVideoData() {
     return this._mapData.get("raw")[this.observable.videoId]
   }
 
@@ -109,7 +126,6 @@ class VideoModel extends BaseModel {
   get currentVideo() {
     return this.observable[this.observable.videoId]
   }
-
 }
 
 const getRefDuration = (currentVideoManifest, currentVideo) => {

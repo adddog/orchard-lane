@@ -1,4 +1,5 @@
 import Q from "bluebird"
+import * as CONSTS from "./constants";
 import Xhr from "xhr-request"
 import * as THREE from "three"
 
@@ -81,4 +82,4 @@ export default (
   opt = {
     height: 1,
   }
-) => data.map(d => Wall(d, 3))
+) => data.map(d => Wall(d, CONSTS.WALL_HEIGHT))

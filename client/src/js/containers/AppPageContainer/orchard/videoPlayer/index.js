@@ -1,9 +1,9 @@
 import { ASSET_URL, JSON_URL } from "utils/utils"
-import MediaPlayer from "orchard-lane-media-player"
 import {  last } from "lodash"
+import MediaPlayer from "orchard-lane-media-player"
 import VideoModel from "orchardModels/videoModel"
 import ThreeModel from "orchardModels/threeModel"
-import OrchardLaneMap from "orchardModels/map"
+import OrchardLaneMap from "orchardModels/orchardLaneMap"
 
 class VideoPlayer {
   init() {

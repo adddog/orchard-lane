@@ -31,14 +31,8 @@ class ThreeModel extends BaseModel {
     })
   }
 
-  get videoData() {
+  get videoData(){
     return this.observable.wallData
-  }
-
-  get previousPlotterPoint(){
-    return this._previousPlotterPoint || {
-      angle:0
-    }
   }
 
   /*
@@ -60,19 +54,15 @@ class ThreeModel extends BaseModel {
     o.y += MAP_OFFSET_Y
 
     if (previousPoint) {
-      o.angle =
-        (1 -
-          vec2.dot(
-            vec2.normalize(vec2.create(), vec2.fromValues(o.x, o.y)),
-            vec2.normalize(
-              vec2.create(),
-              vec2.fromValues(previousPoint.x, previousPoint.y)
-            )
-          )) *
-        (previousPoint.x < o.x ? 1 : -1)
+      o.sign = previousPoint.x < o.x ? 1 : -1,
+      o.angle = vec2.dot(
+        vec2.normalize(vec2.create(), vec2.fromValues(o.x, o.y)),
+        vec2.normalize(
+          vec2.create(),
+          vec2.fromValues(previousPoint.x, previousPoint.y)
+        )
+      )
     }
-
-    this._previousPlotterPoint = o
 
     return o
   }

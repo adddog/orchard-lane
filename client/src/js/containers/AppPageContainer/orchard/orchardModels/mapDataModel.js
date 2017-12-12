@@ -8,11 +8,12 @@ Create an
 
 const createVideoPlaybackModel = (
   videoId,
-  { startTime, endTime }
+  { startTime, endTime, initialRotation }
 ) => ({
   videoId,
   startTime,
   endTime,
+  initialRotation,
   currentStartTime: 0,
   currentTime: 0,
 })

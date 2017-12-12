@@ -48,15 +48,16 @@ export default class AppPageContainer extends Component {
   }
 
   _startScene(el) {
+    const { config } = this.props
     Scene(
       ThreeScene(el, this.refs.three, {
-        hide: true,
+        hide: config.get('hideVideo'),
       })
     )
   }
 
   componentWillReceiveProps(nextProps) {
-    const { mapData } = nextProps
+    const { mapData, config } = nextProps
     if (
       mapData.get("loadComplete") &&
       mapData.get("loadComplete") !==
@@ -64,10 +65,12 @@ export default class AppPageContainer extends Component {
     ) {
 
       OrchardLane.start(mapData)
-
       const mediaPlayer = VideoPlayer.init()
       VideoPlayer.start()
-      this.refs.testVideo.appendChild(mediaPlayer.mediaSource.el)
+
+      if(this.props.config.get('debug')){
+        this.refs.testVideo.appendChild(mediaPlayer.mediaSource.el)
+      }
 
       this._startScene(mediaPlayer.mediaSource.el)
 

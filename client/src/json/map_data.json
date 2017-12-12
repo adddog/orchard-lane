@@ -3,6 +3,7 @@
     "x":10,
     "y":10,
     "videoData":{
+      "initialRotation":240,
       "startTime":39,
       "endTime":701
     },
@@ -29,6 +30,7 @@
     "x":17,
     "y":12,
     "videoData":{
+      "initialRotation":180,
       "startTime":6,
       "endTime":300
     },
