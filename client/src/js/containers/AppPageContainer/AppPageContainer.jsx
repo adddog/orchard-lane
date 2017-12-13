@@ -23,7 +23,6 @@ export default class AppPageContainer extends Component {
 
   componentDidMount() {
     const { mapData } = this.props
-
     //MapDataModel.mapData = mapData
 
     /*OrchardLaneMap.init()
