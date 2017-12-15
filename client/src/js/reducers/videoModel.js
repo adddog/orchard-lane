@@ -2,7 +2,8 @@ import {
   SET_JSON_RUN_SETTINGS,
   SET_JSON_VIDEO_MANIFESTS,
   JSON_VIDEO_DATA_SUCCESS,
-  VIDEO_PLAYBACK_UPDATE,
+  VIDEO_PLAYBACK_MODEL_UPDATE,
+  VIDEO_PLAYLIST_MODEL_UPDATE,
 } from "actions/actionTypes"
 
 import { Map } from "immutable"
@@ -149,7 +150,7 @@ export default function mapData(state = initialState, action) {
         .set("videoManifests", videoManifests)
         .set("videoPlaybackModels", videoPlaybackModels)
     }
-    case VIDEO_PLAYBACK_UPDATE: {
+    case VIDEO_PLAYBACK_MODEL_UPDATE: {
       const { payload } = action
       const videoPlaybackModels = state.get("videoPlaybackModels")
       videoPlaybackModels[payload.videoId] = {
@@ -157,6 +158,20 @@ export default function mapData(state = initialState, action) {
         ...payload,
       }
       return state.set("videoPlaybackModels", videoPlaybackModels)
+    }
+    case VIDEO_PLAYLIST_MODEL_UPDATE: {
+      const { payload } = action
+      const videoPlaylistModel = {
+        ...state.get("videoPlaylistModels")[
+          state.videoModel.get("activePlaylist")
+        ],
+        ...payload,
+      }
+      console.log(videoPlaylistModel);
+      return state.set("videoPlaylistModels", {
+        ...state.get("videoPlaylistModels"),
+        [state.videoModel.get("activePlaylist")]: videoPlaylistModel,
+      })
     }
 
     default: {

@@ -1,4 +1,4 @@
-export const ITAG = "133"
+export const ITAG = Detector.isMobile ? "133" : "133"
 
 export const REMOTE_ASSET_URL = process.env.ASSET_URL
 

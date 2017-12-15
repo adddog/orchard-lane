@@ -9,7 +9,10 @@ import {
 import { connect } from "react-redux"
 import { find, omit } from "lodash"
 import { bindActionCreators } from "redux"
-import { updatePlaybackModel } from "actions/videoModel"
+import {
+    updatePlaybackModel,
+    updatePlaylistModel,
+} from "actions/videoModel"
 import { withRouter } from "react-router-dom"
 
 const mapStateToProps = () => {
@@ -24,7 +27,10 @@ const mapStateToProps = () => {
 
 const mapDispatchToProps = (dispatch, props) => ({
     dispatch,
-    ...bindActionCreators({ updatePlaybackModel }, dispatch),
+    ...bindActionCreators(
+        { updatePlaybackModel, updatePlaylistModel },
+        dispatch
+    ),
 })
 
 const mergeProps = (stateProps, dispatchProps, ownProps) => {

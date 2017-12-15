@@ -8,6 +8,6 @@ export default class OrchardModel {
   }
 
   update(props){
-
+    VideoModel.update(props)
   }
 }

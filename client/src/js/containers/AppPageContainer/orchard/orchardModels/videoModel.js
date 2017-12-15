@@ -12,14 +12,12 @@ import {
 
 class VideoModel {
   init(props, dispatch) {
-    const { state } = props
-    this.props = props
-    this.state = state
+    this.update(props)
     this.dispatch = dispatch
 
     this.observable = observable({
       itag: ITAG,
-      videoId: getActivePlaylistVideoId(state),
+      videoId: getActivePlaylistVideoId(this.state),
     })
 
     this.observable.on("videoId", value => {
@@ -36,7 +34,12 @@ class VideoModel {
     this.playbackTimecodes = []
     this.playbackDict = []
 
-    this.stateUpdated(state)
+    this.stateUpdated(this.state)
+  }
+
+  update(props){
+    this.props = props
+    this.state = this.props.state
   }
 
   stateUpdated(state) {
@@ -52,7 +55,7 @@ class VideoModel {
   timeUpdate(t) {
     const { videoStartTime } = this.playbackModel
     this.props.updatePlaybackModel({
-      videoId:this.playbackModel.videoId,
+      videoId: this.playbackModel.videoId,
       videoCurrentTime: t - videoStartTime,
       videoProgress:
         this.playbackModel.videoCurrentTime /
@@ -84,9 +87,18 @@ class VideoModel {
 
   incrementReference(count) {
     count += 1
-    this.playbackModel.currentReference = this.playbackModel.currentReference.map(
-      ref => (ref += count)
-    )
+      this.props.updatePlaylistModel({
+        videoIndex:this.playlistModel.videoIndex++
+      })
+    if(count > this.videoManifest.sidx.references.length-1){
+    }else{
+      /*this.props.updatePlaybackModel({
+        videoId: this.playbackModel.videoId,
+        currentReference: this.playbackModel.currentReference.map(
+          ref => (ref += count)
+        ),
+      })*/
+    }
   }
 
   get currentVideo() {
