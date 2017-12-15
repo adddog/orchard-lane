@@ -44,9 +44,7 @@ export default function mapData(state = initialState, action) {
     }
     case INIT_LOAD_COMPLETE: {
       const { payload } = action
-      console.log(makeWallData(state))
       return state
-        .set("wallData", makeWallData(state))
         .set("loadComplete", payload)
     }
     default: {

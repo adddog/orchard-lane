@@ -107,17 +107,17 @@ function* doInit(action) {
     })
 
     const videoIds = yield select(getAllVideoIds)
-    const plotPaths = yield call(VIDEO_PLOT_PATHS, videoIds)
+    /*const plotPaths = yield call(VIDEO_PLOT_PATHS, videoIds)
     yield put({
         type: SET_MAP_DATA_PLOT_PATHS,
         payload: compact(plotPaths),
-    })
+    })*/
 
     const { itag } = yield select(state =>
         state.mapData.get("runSettings")
     )
 
-    const videoManifests = yield call(
+    /*const videoManifests = yield call(
         VIDEO_MANIFESTS,
         videoIds.map(
             id => `${REMOTE_ASSET_URL}${id}_${itag || ITAG}.json`
@@ -127,7 +127,7 @@ function* doInit(action) {
     yield put({
         type: SET_JSON_VIDEO_MANIFESTS,
         payload: videoManifests,
-    })
+    })*/
 
     yield put({
         type: INIT_LOAD_COMPLETE,

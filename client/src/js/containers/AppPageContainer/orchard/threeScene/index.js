@@ -25,37 +25,8 @@ export function polarToVector3(lon, lat, radius, vector) {
 }
 
 const OrchardLane = threeScene => {
-  const { mapData } = ThreeModel
-  const { currentVideoModelData } = VideoModel
-  const rawData = mapData.get("plotPaths")
-
-  if (!mapData.size) {
-    throw new Error(`ThreeModel hasn't loaded`)
-  }
 
   threeScene.start()
-
-  threeScene.scene.setHandlers({
-    onWallClicked: mesh => {
-      if (mesh) {
-        if (mesh.object.userData && mesh.object.userData.videoId) {
-          const totalFaces = mesh.object.geometry.faces.length
-          ThreeModel.updateValue(
-            "faceIndex",
-            Math.floor(mesh.faceIndex / totalFaces)
-          )
-          VideoModel.updateValue(
-            "videoId",
-            mesh.object.userData.videoId
-          )
-        }
-      }
-    },
-  })
-
-  threeScene.scene.updateConfig({
-    initialRotation: currentVideoModelData.initialRotation,
-  })
 /*
   const { scene } = threeScene.scene.renderingContext
   const material = new THREE.MeshBasicMaterial({

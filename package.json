@@ -21,6 +21,7 @@
     "prestart": "npm run clean-and-copy",
     "start": "webpack-dev-server --env.dev  --content-base client/dist",
     "build:js": "webpack --env.prod -p",
+    "build:dev": "webpack --env.dev",
     "build": "npm-run-all -l -s clean-dist clean-and-copy copy-files build:js copy-dist-to-server"
   },
   "engines": {
@@ -135,7 +136,7 @@
     "sugarss": "^1.0.0",
     "svg-inline-loader": "^0.7.1",
     "svg-inline-react": "^2.1.0",
-    "uglify-js": "^2.8.23",
+    "uglify-es": "^3.2.2",
     "uglifyjs-webpack-plugin": "^0.4.6",
     "url-loader": "^0.5.9",
     "webpack": "^3.4.1",

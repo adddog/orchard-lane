@@ -1,5 +1,5 @@
 import React, { Component, PropTypes } from "react"
-import { isObject, isUndefined, keys, find } from "lodash"
+import { isObject, isUndefined, keys, find , sample} from "lodash"
 import classnames from "classnames"
 import Q from "bluebird"
 import Xhr from "xhr-request"
@@ -50,32 +50,32 @@ export default class AppPageContainer extends Component {
     const { config } = this.props
     Scene(
       ThreeScene(el, this.refs.three, {
-        hide: config.get("hideVideo"),
+        hide: false
       })
     )
   }
 
   componentWillReceiveProps(nextProps) {
     const { videoModel, mapData, config, dispatch } = nextProps
-
+    console.log(mapData.get("loadComplete"));
     if (
       mapData.get("loadComplete") &&
       mapData.get("loadComplete") !==
         this.props.mapData.get("loadComplete")
     ) {
 
-      OrchardLaneModels.start(
+      /*OrchardLaneModels.start(
         nextProps,
         dispatch
-      )
+      )*/
 
-      const mediaPlayer = new VideoPlayer()
+      //const mediaPlayer = new VideoPlayer()
 
       if (this.props.config.get("debug")) {
       }
-        this.refs.testVideo.appendChild(mediaPlayer.mediaSource.el)
+        //this.refs.testVideo.appendChild(mediaPlayer.mediaSource.el)
 
-      //this._startScene(mediaPlayer.mediaSource.el)
+      this._startScene(this.refs.testVideo)
 
       /*console.log("------")
       console.log(process.env.OFFLINE)
@@ -92,13 +92,26 @@ export default class AppPageContainer extends Component {
         }, 250)
       }*/
     } else {
-      OrchardLaneModels.update(nextProps)
+      //OrchardLaneModels.update(nextProps)
     }
   }
 
   componentDidUpdate() {}
 
   _render() {
+
+    const videoId = sample([
+    "C9KF6EdS9-8",
+    "RbhnkPS3MDQ",
+    "lmiJKfX_DiE",
+    "pl2lljkJZqc",
+    "yiTHpe33Fy0",
+    "rjzEolVYv0M",
+    "9ACjSl5XH7k"
+  ])
+
+    const url = `https://storage.googleapis.com/orchard-lane/rjzEolVYv0M_137`
+    console.log(url);
     //<video ref="videoEl" src="orchardlaneModels.mp4" />
     return (
       <main
@@ -113,7 +126,12 @@ export default class AppPageContainer extends Component {
           ])}
           data-ui-ref="AppContent"
         />
-        <div
+        <video
+          src={url}
+          style={{"display":"none"}}
+          crossOrigin="anonymous"
+          autoPlay="true"
+          playsInline="true"
           ref="testVideo"
           className={classnames([styles.testVideo])}
         />
