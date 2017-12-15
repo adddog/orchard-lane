@@ -2,14 +2,6 @@
 *.mp4
 node_modules
 package-lock.json
-
-client/dist/*.js
-client/dist/*.map
-client/dist/*.css
-client/dist/images
-client/dist/fonts/
-client/dist/json/
-client/dist/index.html
 server/static
 
 dev
