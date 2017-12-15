@@ -1,40 +1,45 @@
-import React from 'react';
-import AppPageContainer from "containers/AppPageContainer/AppPageContainer";
-import { compose, setDisplayName,onlyUpdateForPropTypes, withHandlers } from "recompose";
-import { connect } from "react-redux";
-import { find, omit } from "lodash";
-import { withRouter } from 'react-router-dom'
+import React from "react"
+import AppPageContainer from "containers/AppPageContainer/AppPageContainer"
+import {
+    compose,
+    setDisplayName,
+    onlyUpdateForPropTypes,
+    withHandlers,
+} from "recompose"
+import { connect } from "react-redux"
+import { find, omit } from "lodash"
+import { bindActionCreators } from "redux"
+import { updatePlaybackModel } from "actions/videoModel"
+import { withRouter } from "react-router-dom"
 
 const mapStateToProps = () => {
     return (state, ownProps) => {
         return {
-            config:state.config,
-            mapData:state.mapData,
+            state,
+            ...state,
             ...ownProps,
-        };
-    };
-};
+        }
+    }
+}
 
 const mapDispatchToProps = (dispatch, props) => ({
-
-});
+    dispatch,
+    ...bindActionCreators({ updatePlaybackModel }, dispatch),
+})
 
 const mergeProps = (stateProps, dispatchProps, ownProps) => {
     return {
         ...stateProps,
         ...dispatchProps,
         ...ownProps,
-    };
-};
+    }
+}
 
-export default withRouter(compose(
-    setDisplayName("AppPageContainer"),
-    withHandlers({
-    }),
-    connect(
-        mapStateToProps,
-        mapDispatchToProps,
-        mergeProps,
-    ),
-    onlyUpdateForPropTypes,
-)(AppPageContainer));
+export default withRouter(
+    compose(
+        setDisplayName("AppPageContainer"),
+        withHandlers({}),
+        connect(mapStateToProps, mapDispatchToProps, mergeProps),
+        onlyUpdateForPropTypes
+    )(AppPageContainer)
+)

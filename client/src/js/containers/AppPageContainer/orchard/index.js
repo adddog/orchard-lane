@@ -1,14 +1,17 @@
 import OrchardModel from "orchardModels"
 
 class OrchardLane {
-  start(mapData) {
-    if (!mapData) {
-      throw new Error(`Need to set mapData on the Model first`)
+  start(state, dispatch) {
+
+    if (!state) {
+      throw new Error(`Need to set state, dispatch on the Model first`)
     }
 
-    this.model = new OrchardModel(mapData)
-    //OrchardLaneMap.start()
+    this.model = new OrchardModel(state, dispatch)
 
+  }
+
+  update(state){
 
   }
 

@@ -47,7 +47,7 @@ class ThreeModel extends BaseModel {
   get currentPlotterPoint() {
     const plotterProgress = this.observable.plotterProgress
     const index = Math.floor(
-      (this.observable.wallData.points.length - 1) * plotterProgress
+      (this.observable._getCurrentWallData.points.length - 1) * plotterProgress
     )
 
     const previousPoint = this.observable.wallData.points[index - 1]

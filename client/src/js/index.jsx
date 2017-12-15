@@ -1,5 +1,6 @@
 import './index.scss';
 import './index.css';
+import Detector from 'utils/detector'
 
 import {
     INIT_RUN,

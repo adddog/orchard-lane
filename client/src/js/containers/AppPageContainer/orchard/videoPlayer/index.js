@@ -1,20 +1,12 @@
 import { ASSET_URL, JSON_URL } from "utils/utils"
-import {  last } from "lodash"
+import { last } from "lodash"
 import MediaPlayer from "orchard-lane-media-player"
 import VideoModel from "orchardModels/videoModel"
 import ThreeModel from "orchardModels/threeModel"
 
 class VideoPlayer {
-  init() {
-    const { mapData, observable } = VideoModel
-
-    if (!mapData.get("loadComplete")) throw new Error(`Not loaded`)
-
-    const videoIds = mapData.get("videoIds")
-
-    if (!videoIds) {
-      throw new Error(`VideoModel hasn't loaded`)
-    }
+  constructor() {
+    this.currentVideoManifest = VideoModel.getActiveVideoManifest()
 
     this._mediaPlayer = MediaPlayer({
       assetUrl: process.env.ASSET_URL,
@@ -22,17 +14,23 @@ class VideoPlayer {
 
     this._addListeners()
 
-    return this._mediaPlayer
+    this.addReference()
+  }
+
+  get mediaSource() {
+    return this._mediaPlayer.mediaSource
   }
 
   _addListeners() {
     const { mediaSource } = this._mediaPlayer
-    const { observable, currentVideo } = VideoModel
+    const { observable } = VideoModel
 
     let _newVideo = false
     observable.on("videoId", (value, prev) => {
       _newVideo = true
-      this.currentVideoManifest = VideoModel.getCurrentVideoManifest(value)
+      this.currentVideoManifest = VideoModel.getCurrentVideoManifest(
+        value
+      )
     })
 
     mediaSource.endingSignal.add(() => {
@@ -42,7 +40,7 @@ class VideoPlayer {
 
     mediaSource.timeUpdateSignal.add(t => {
       VideoModel.timeUpdate(t)
-      ThreeModel.timeUpdate(t)
+      //ThreeModel.timeUpdate(t)
       /*let _previousTime = null
       if (_previousTime !== t) {
         Model.updateValue(
@@ -54,8 +52,10 @@ class VideoPlayer {
       _previousTime = t*/
     })
     mediaSource.segmentAddedSignal.add(t => {
-      if(_newVideo){
-        mediaSource.currentTime = last(VideoModel.playbackTimecodes).toFixed(3)
+      if (_newVideo) {
+        mediaSource.currentTime = last(
+          VideoModel.playbackTimecodes
+        ).toFixed(3)
       }
       _newVideo = false
       VideoModel.referenceAdded()
@@ -105,16 +105,6 @@ class VideoPlayer {
       currentVideo.currentReference
     )
   }
-
-  start() {
-    const { currentVideo } = VideoModel
-
-    if (!this._mediaPlayer) throw new Error(`No mediaplayer!`)
-
-    this.currentVideoManifest = VideoModel.getCurrentVideoManifest()
-
-    this.addReference()
-  }
 }
 
-export default new VideoPlayer()
+export default VideoPlayer

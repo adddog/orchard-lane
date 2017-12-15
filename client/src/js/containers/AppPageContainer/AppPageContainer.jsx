@@ -8,7 +8,7 @@ import ThreeScene from "orchard-lane-three"
 import VideoPlayer from "videoPlayer"
 
 import Scene from "threeScene"
-import OrchardLane from "./orchard"
+import OrchardLaneModels from "./orchard"
 
 import styles from "./AppPageContainer.css"
 
@@ -50,29 +50,32 @@ export default class AppPageContainer extends Component {
     const { config } = this.props
     Scene(
       ThreeScene(el, this.refs.three, {
-        hide: config.get('hideVideo'),
+        hide: config.get("hideVideo"),
       })
     )
   }
 
   componentWillReceiveProps(nextProps) {
-    const { mapData, config } = nextProps
+    const { videoModel, mapData, config, dispatch } = nextProps
+
     if (
       mapData.get("loadComplete") &&
       mapData.get("loadComplete") !==
         this.props.mapData.get("loadComplete")
     ) {
 
-      OrchardLane.start(mapData)
-      const mediaPlayer = VideoPlayer.init()
-      VideoPlayer.start()
+      OrchardLaneModels.start(
+        nextProps,
+        dispatch
+      )
 
-      if(this.props.config.get('debug')){
-        this.refs.testVideo.appendChild(mediaPlayer.mediaSource.el)
+      const mediaPlayer = new VideoPlayer()
+
+      if (this.props.config.get("debug")) {
       }
+        this.refs.testVideo.appendChild(mediaPlayer.mediaSource.el)
 
-      this._startScene(mediaPlayer.mediaSource.el)
-
+      //this._startScene(mediaPlayer.mediaSource.el)
 
       /*console.log("------")
       console.log(process.env.OFFLINE)
@@ -88,19 +91,20 @@ export default class AppPageContainer extends Component {
           _t += 250
         }, 250)
       }*/
+    } else {
+      OrchardLaneModels.update(nextProps)
     }
   }
 
   componentDidUpdate() {}
 
   _render() {
-    //<video ref="videoEl" src="orchardlane.mp4" />
+    //<video ref="videoEl" src="orchardlaneModels.mp4" />
     return (
       <main
         data-ui-ref="AppContentContainer"
         className={classnames(styles.root)}
       >
-
         <div
           ref="three"
           className={classnames([
@@ -111,9 +115,7 @@ export default class AppPageContainer extends Component {
         />
         <div
           ref="testVideo"
-          className={classnames([
-            styles.testVideo,
-          ])}
+          className={classnames([styles.testVideo])}
         />
       </main>
     )

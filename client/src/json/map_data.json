@@ -2,11 +2,6 @@
   "R4-XIR7b-Qo": {
     "x":10,
     "y":10,
-    "videoData":{
-      "initialRotation":240,
-      "startTime":39,
-      "endTime":701
-    },
     "points": [
       {
         "val": 1,
@@ -29,11 +24,6 @@
   "3DC9Y2BqyuU": {
     "x":17,
     "y":12,
-    "videoData":{
-      "initialRotation":180,
-      "startTime":6,
-      "endTime":300
-    },
     "points": [
       {
         "val": 0,

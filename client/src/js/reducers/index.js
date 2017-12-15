@@ -1,11 +1,13 @@
 import { combineReducers } from 'redux';
 import config from './config';
 import mapData from './mapData';
+import videoModel from './videoModel';
 import { createResponsiveStateReducer } from 'redux-responsive';
 
 const dashApp = combineReducers({
   config,
   mapData,
+  videoModel,
   browser: createResponsiveStateReducer({
     mobile: 360,
     phablet: 540,

@@ -56,7 +56,7 @@ const OrchardLane = threeScene => {
   threeScene.scene.updateConfig({
     initialRotation: currentVideoModelData.initialRotation,
   })
-
+/*
   const { scene } = threeScene.scene.renderingContext
   const material = new THREE.MeshBasicMaterial({
     color: 0xff0000,
@@ -105,7 +105,7 @@ const OrchardLane = threeScene => {
     //threeScene.scene.updateConfig({
     //cameraPosition: cameraPosition,
     //})
-  })
+  })*/
   return {}
 }
 export default OrchardLane
