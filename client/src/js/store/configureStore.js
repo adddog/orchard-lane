@@ -1,12 +1,10 @@
 import 'babel-polyfill';
 import { applyMiddleware, compose, createStore } from 'redux';
-import thunk from 'redux-thunk';
 import Reducers from 'reducers';
 import createSagaMiddleware from "redux-saga";
 import rootSaga from "sagas";
 import { createLogger } from 'redux-logger';
 import { responsiveStoreEnhancer } from 'redux-responsive';
-import promiseMiddleware from 'redux-promise-middleware';
 import { connectRouter, routerMiddleware } from 'connected-react-router'
 
 

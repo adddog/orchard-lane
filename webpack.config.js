@@ -5,7 +5,6 @@ const colors = require("colors")
 const _ = require("lodash")
 
 const webpack = require("webpack")
-const jsonImporter = require("node-sass-json-importer")
 const HtmlWebpackPlugin = require("html-webpack-plugin")
 const ExtractTextPlugin = require("extract-text-webpack-plugin")
 const UglifyJSPlugin = require("uglifyjs-webpack-plugin")
@@ -14,10 +13,12 @@ const postcssEasings = require("postcss-easings")
 module.exports = env => {
   const isDev = !!env.dev
   const isProd = !!env.prod
+  const isDebug = !!process.env.DEBUG
   const isTest = !!env.test
 
   const DefineENV = new webpack.DefinePlugin(
     Object.assign({}, require("dotenv").config(), {
+      "process.env.DEV": isDev,
       "process.env.IPEDS": "'9228723'",
       "process.env.ASSET_URL":
         "'https://storage.googleapis.com/orchard-lane/'",
@@ -41,37 +42,63 @@ module.exports = env => {
   const removeEmpty = array => array.filter(i => !!i)
 
   const stylesLoaders = () => {
-    const CSS_LOADERS = {
-      css: {
-        loader:
-          "css-loader?importLoader=1&localIdentName=[name]__[local]___[hash:base64:5]&modules=true&url=false!postcss-loader",
-      },
-    }
+    const CSS_LOADERS = isProd
+      ? [
+          {
+            test: /\.css$/,
+            exclude: /node_modules/,
+            use: ExtractTextPlugin.extract({
+              fallback: "style-loader",
+              use: [
+                {
+                  loader: "css-loader",
+                  options: {
+                    importLoaders: 1,
+                    modules: true,
+                    url: false,
+                    localIdentName: "[name]__[local]",
+                  },
+                },
+                "postcss-loader",
+              ],
+            }),
+          },
+        ]
+      : [
+          {
+            test: /\.css$/,
+            exclude: /node_modules/,
+            use: [
+              "style-loader",
+              {
+                loader: "css-loader",
+                options: {
+                  modules: true,
+                  url: false,
+                  localIdentName: "[name]__[local]___[hash:base64:5]",
+                  importLoaders: 1,
+                },
+              },
+              {
+                loader: "postcss-loader",
+                options: {
+                  sourceMap: isDev,
+                },
+              },
+            ],
+          },
+        ]
 
-    let _l = Object.keys(CSS_LOADERS).map(ext => {
-      const extLoaders = CSS_LOADERS[ext]
-      const loader = isDev
-        ? `style-loader!${extLoaders.loader}`
-        : ExtractTextPlugin.extract({ use: `${extLoaders.loader}` })
-      return _.omitBy(
-        {
-          loader,
-          exclude: /node_modules/,
-          test: new RegExp(`\\.(${ext})$`),
-        },
-        _.isNil
-      )
-    })
     console.log(colors.yellow(`-- Css Loaders --`))
-    console.log(_l)
+    console.log(CSS_LOADERS)
     console.log(colors.yellow(`--  --`))
-    return _l
+    return CSS_LOADERS
   }
 
   return {
     entry: {
-      app: "./js/index.jsx",
-      vendor: ["react", "redux", "redux-saga", "immutable", "lodash"],
+      app: `${constants.SRC_DIR}/js/index.jsx`,
+      vendor: ["immutable", "lodash", "react", "redux", "redux-saga"],
     },
     node: {
       dns: "mock",
@@ -111,84 +138,21 @@ module.exports = env => {
         resolve(`${constants.JS_SRC_DIR}`, "selectors"),
         resolve(`${constants.JS_SRC_DIR}`, "sagas"),
         resolve(`${constants.JS_SRC_DIR}`, "utils"),
-
-        resolve(
-          join(
-            `${constants.JS_SRC_DIR}`,
-            "containers",
-            "AppPageContainer"
-          ),
-          "orchard"
-        ),
-
-        resolve(
-          join(
-            `${constants.JS_SRC_DIR}`,
-            "containers",
-            "AppPageContainer",
-            "orchard"
-          ),
-          "threeScene"
-        ),
-
-        resolve(
-          join(
-            `${constants.JS_SRC_DIR}`,
-            "containers",
-            "AppPageContainer",
-            "orchard"
-          ),
-          "videoPlayer"
-        ),
-
-        resolve(
-          join(
-            `${constants.JS_SRC_DIR}`,
-            "containers",
-            "AppPageContainer",
-            "orchard"
-          ),
-          "orchardModels"
-        ),
+        resolve(`${constants.JS_SRC_DIR}`, "api"),
       ],
-      /*
-alias: {
-      }*/
+    },
+    node: {
+      fs: "empty",
+      child_process: "empty",
     },
     module: {
-      /*rules: [{
-        test: /\.(jpe?g|png|gif|svg)$/i,
-        use: [
-          'url-loader?limit=10000',
-          'img-loader'
-        ]
-      }],*/
-      loaders: [
-        {
-          test: /\.svg$/,
-          exclude: /node_modules/,
-          loader: "svg-inline-loader",
-        },
-        {
-          loader: "url-loader?limit=100000",
-          exclude: /node_modules/,
-          test: /\.(ttf|eot|woff(2)?)(\?[a-z0-9]+)?$/,
-          include: [`${join(constants.ASSETS_DIR, "/font/")}`],
-        },
-        {
-          test: /\.json$/,
-          exclude: /node_modules/,
-          loader: "json-loader",
-        },
+      rules: [
         {
           test: /\.(js|jsx)$/,
-          loader: "babel-loader",
-          exclude: /node_modules(?!\/dis-gui)/,
-        },
-        {
-          test: /\.sss$/,
-          loader: "css-object-loader!postcss-loader",
-          exclude: /node_modules/,
+          exclude: /(node_modules|bower_components)/,
+          use: {
+            loader: "babel-loader",
+          },
         },
       ].concat(stylesLoaders()),
     },
@@ -207,7 +171,7 @@ alias: {
       ),
       ifProd(
         new ExtractTextPlugin({
-          filename: "css/[name].css",
+          filename: "css/main.css",
           disable: false,
           allChunks: true,
         })
@@ -220,21 +184,23 @@ alias: {
         })
       ),
       ifProd(
-        new UglifyJSPlugin({
-          sourceMap: true,
-          compress: {
-            warnings: false,
-            screw_ie8: true,
-            conditionals: true,
-            unused: true,
-            comparisons: true,
-            sequences: true,
-            dead_code: true,
-            evaluate: true,
-            if_return: true,
-            join_vars: true,
-          },
-        })
+        isDebug
+          ? undefined
+          : new UglifyJSPlugin({
+              sourceMap: true,
+              compress: {
+                warnings: false,
+                screw_ie8: true,
+                conditionals: true,
+                unused: true,
+                comparisons: true,
+                sequences: true,
+                dead_code: true,
+                evaluate: true,
+                if_return: true,
+                join_vars: true,
+              },
+            })
       ),
       DefineENV,
       ifNotTest(
@@ -251,18 +217,13 @@ alias: {
       new webpack.LoaderOptionsPlugin({
         context: __dirname,
         options: {
-          postcss: {
-            options: {
-              config: {
-                path: "./postcss.config.js",
-                ctx: {
-                  options: {
-                    map: isDev,
-                    parser: "sugarss",
-                  },
-                },
-              },
-            },
+          sassLoader: {
+            assetsUrl: `""`,
+            includePaths: [
+              join(constants.CSS_SRC_DIR),
+              join(constants.CSS_SRC_DIR, "vars"),
+              join(constants.CSS_SRC_DIR, "site"),
+            ],
           },
         },
       }),
