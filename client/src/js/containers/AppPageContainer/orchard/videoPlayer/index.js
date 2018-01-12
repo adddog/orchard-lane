@@ -1,4 +1,4 @@
-import { ASSET_URL, JSON_URL } from "utils/utils"
+import { REMOTE_VIDEO_ASSET_URL, JSON_URL } from "utils/utils"
 import { last } from "lodash"
 import MediaPlayer from "orchard-lane-media-player"
 import VideoModel from "orchardModels/videoModel"
@@ -9,7 +9,7 @@ class VideoPlayer {
     this.currentVideoManifest = VideoModel.getActiveVideoManifest()
 
     this._mediaPlayer = MediaPlayer({
-      assetUrl: process.env.ASSET_URL,
+      assetUrl: REMOTE_VIDEO_ASSET_URL,
     })
 
     this._addListeners()
@@ -33,6 +33,9 @@ class VideoPlayer {
       )
     })
 
+    /******************
+    MEDIA UPDATE LISTENERS
+    ******************/
     mediaSource.endingSignal.add(() => {
       VideoModel.incrementReference(1)
       this.addReference()
@@ -99,7 +102,8 @@ class VideoPlayer {
 
   addReference() {
     const { currentVideo } = VideoModel
-    VideoModel.addReference()
+    console.log(currentVideo);
+    console.log(VideoModel.playbackModel);
     this._mediaPlayer.addFromReference(
       this.currentVideoManifest,
       currentVideo.currentReference

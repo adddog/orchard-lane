@@ -11,13 +11,13 @@ import {
 } from "selectors/videoModel"
 
 class VideoModel {
-  init(props, dispatch) {
-    this.update(props)
+  init(state, dispatch) {
+    this.update(state)
     this.dispatch = dispatch
 
     this.observable = observable({
       itag: ITAG,
-      videoId: getActivePlaylistVideoId(this.state),
+      videoId: getActivePlaylistVideoId(state),
     })
 
     this.observable.on("videoId", value => {
@@ -33,19 +33,14 @@ class VideoModel {
 
     this.playbackTimecodes = []
     this.playbackDict = []
-
-    this.stateUpdated(this.state)
   }
 
-  update(props){
-    this.props = props
-    this.state = this.props.state
-  }
-
-  stateUpdated(state) {
+  update(state) {
+    this.state = state
     this.playlistModel = getActivePlaylistModel(state)
     this.videoManifest = getActiveVideoManifest(state)
     this.playbackModel = getActivePlaybackModel(state)
+    console.log(state);
   }
 
   getActiveVideoManifest() {
@@ -54,7 +49,7 @@ class VideoModel {
 
   timeUpdate(t) {
     const { videoStartTime } = this.playbackModel
-    this.props.updatePlaybackModel({
+    this.state.updatePlaybackModel({
       videoId: this.playbackModel.videoId,
       videoCurrentTime: t - videoStartTime,
       videoProgress:
@@ -62,8 +57,6 @@ class VideoModel {
         this.playbackModel.duration,
     })
   }
-
-  addReference() {}
 
   referenceAdded() {
     this.playbackModel.referenceStartTime =
@@ -87,23 +80,24 @@ class VideoModel {
 
   incrementReference(count) {
     count += 1
-      this.props.updatePlaylistModel({
-        videoIndex:this.playlistModel.videoIndex++
+    if (count > this.videoManifest.sidx.references.length - 1) {
+      this.state.updatePlaylistModel({
+        videoIndex: this.playlistModel.videoIndex++,
       })
-    if(count > this.videoManifest.sidx.references.length-1){
-    }else{
-      /*this.props.updatePlaybackModel({
+    } else {
+      this.state.updatePlaybackModel({
         videoId: this.playbackModel.videoId,
         currentReference: this.playbackModel.currentReference.map(
           ref => (ref += count)
         ),
-      })*/
+      })
     }
   }
 
   get currentVideo() {
     return this.playbackModel
   }
+
 }
 
 const getRefDuration = (currentVideoManifest, currentVideo) => {

@@ -14,36 +14,14 @@ import styles from "./AppPageContainer.css"
 
 export default class AppPageContainer extends Component {
   static propTypes = {
+    general: PropTypes.object.isRequired,
+    config: PropTypes.object.isRequired,
+    videoModel: PropTypes.object.isRequired,
     mapData: PropTypes.object.isRequired,
   }
 
   constructor(props) {
     super(props)
-  }
-
-  componentDidMount() {
-    const { mapData } = this.props
-    //MapDataModel.mapData = mapData
-
-    /*OrchardLaneMap.init()
-
-    VideoPlayer().then(mediaPlayer => {
-      const { mediaSource } = mediaPlayer
-      this._startScene(mediaSource.el)
-    })
-    console.log("------");
-    console.log(process.env.OFFLINE);
-    if (process.env.OFFLINE) {
-      this._startScene(this.refs.videoEl)
-      let _t = 0
-      setInterval(() => {
-        const nextPoint = OrchardLaneMap.getPlotProgress(_t)
-        if (nextPoint) {
-          Model.updateValue("plotterProgress", nextPoint)
-        }
-        _t += 250
-      }, 250)
-    }*/
   }
 
   _startScene(el) {
@@ -55,25 +33,35 @@ export default class AppPageContainer extends Component {
     )
   }
 
+  getOrchardLaneModelProps(props){
+    return {
+      updatePlaybackModel: props.updatePlaybackModel,
+      mapData: props.mapData,
+      videoModel: props.videoModel,
+    }
+  }
+
   componentWillReceiveProps(nextProps) {
-    const { videoModel, mapData, config, dispatch } = nextProps
+    const { general, dispatch } = nextProps
+    console.log("---------------------------------------");
+    console.log(nextProps);
+    console.log("---------------------------------------");
 
     if (
-      mapData.get("loadComplete") &&
-      mapData.get("loadComplete") !==
-        this.props.mapData.get("loadComplete")
+      general.get("loadComplete") &&
+      general.get("loadComplete") !==
+        this.props.general.get("loadComplete")
     ) {
 
-      OrchardLaneModels.start(
-        nextProps,
-        dispatch
-      )
+      OrchardLaneModels.start(this.getOrchardLaneModelProps(nextProps), dispatch)
 
       const mediaPlayer = new VideoPlayer()
 
       if (this.props.config.get("debug")) {
+        console.log(this.refs);
+        //this.refs.testVideo.appendChild(mediaPlayer.mediaSource.el)
+        document.body.appendChild(mediaPlayer.mediaSource.el)
       }
-        this.refs.testVideo.appendChild(mediaPlayer.mediaSource.el)
 
       //this._startScene(mediaPlayer.mediaSource.el)
 
@@ -94,6 +82,18 @@ export default class AppPageContainer extends Component {
     } else {
       OrchardLaneModels.update(nextProps)
     }
+  }
+  shouldComponentUpdate(nextProps) {
+    const { general, dispatch } = nextProps
+
+
+    return general.get("loadComplete") !==
+        this.props.general.get("loadComplete")
+
+    return (
+      nextProps.mapData.get("loadComplete") !==
+      this.props.mapData.get("loadComplete")
+    )
   }
 
   componentDidUpdate() {}

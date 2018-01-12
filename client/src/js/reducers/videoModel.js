@@ -4,10 +4,11 @@ import {
   JSON_VIDEO_DATA_SUCCESS,
   VIDEO_PLAYBACK_MODEL_UPDATE,
   VIDEO_PLAYLIST_MODEL_UPDATE,
+  INIT_LOAD_COMPLETE,
 } from "actions/actionTypes"
 
 import { Map } from "immutable"
-import { keys, assign, pick, find, map } from "lodash"
+import { isArray, keys, assign, pick, find, map } from "lodash"
 
 const initialState = new Map({
   runSettings: null,
@@ -119,7 +120,13 @@ export default function mapData(state = initialState, action) {
       const videoPlaybackModels = state.get("videoPlaybackModels")
 
       const videoManifests = payload
+        /*
+      Modify the manifests
+      */
         .map(videoManifest => {
+          /*
+          Direct on the object
+          */
           trimSidx(videoData[videoManifest.videoId], videoManifest)
           return {
             ...videoManifest,
@@ -129,6 +136,9 @@ export default function mapData(state = initialState, action) {
             ),
           }
         })
+        /*
+        Convert to an object
+        */
         .reduce((_accum, videoManifest) => {
           _accum[videoManifest.videoId] = videoManifest
 
@@ -143,13 +153,29 @@ export default function mapData(state = initialState, action) {
           return _accum
         }, {})
 
-      console.log("-------")
-      console.log(videoManifests)
-      console.log("-------")
       return state
         .set("videoManifests", videoManifests)
         .set("videoPlaybackModels", videoPlaybackModels)
     }
+    case INIT_LOAD_COMPLETE: {
+      const { payload } = action
+      const videoManifests = state.get("videoManifests")
+      const { playlists } = state.get("videoJson")
+      for (let name in playlists) {
+        playlists[name] = playlists[name].filter(
+          videoId => !!videoManifests[videoId]
+        )
+      }
+      return state.set(
+        "videoPlaylistModels",
+        createVideoPlaylistsModels(playlists)
+      )
+    }
+    /*
+    //************
+    UPDATE
+    //************
+    */
     case VIDEO_PLAYBACK_MODEL_UPDATE: {
       const { payload } = action
       const videoPlaybackModels = state.get("videoPlaybackModels")
@@ -163,17 +189,15 @@ export default function mapData(state = initialState, action) {
       const { payload } = action
       const videoPlaylistModel = {
         ...state.get("videoPlaylistModels")[
-          state.videoModel.get("activePlaylist")
+          state.get("activePlaylist")
         ],
         ...payload,
       }
-      console.log(videoPlaylistModel);
       return state.set("videoPlaylistModels", {
         ...state.get("videoPlaylistModels"),
-        [state.videoModel.get("activePlaylist")]: videoPlaylistModel,
+        [state.get("activePlaylist")]: videoPlaylistModel,
       })
     }
-
     default: {
       return state
     }

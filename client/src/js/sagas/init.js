@@ -3,6 +3,7 @@ import {
     ITAG,
     ASSET_URL,
     REMOTE_ASSET_URL,
+    REMOTE_JSON_ASSET_URL,
     JSON_URL,
     INIT_JSON_URL,
 } from "utils/utils"
@@ -14,9 +15,7 @@ import {
     takeLatest,
     select,
 } from "redux-saga/effects"
-import {
-    compact,
-} from "lodash"
+import { compact } from "lodash"
 import { getAllVideoIds } from "selectors/videoModel"
 
 import {
@@ -83,11 +82,12 @@ const VIDEO_MANIFESTS = urls => {
                 headers: {
                     "Access-Control-Allow-Origin": "*",
                 },
-            }),
+            })
+                .catch(err => null)
+                .then(d => (!!d ? d : null)),
         { concurrency: 4 }
     )
 }
-
 
 function* doInit(action) {
     const jsonLoaded = yield all(
@@ -120,13 +120,13 @@ function* doInit(action) {
     const videoManifests = yield call(
         VIDEO_MANIFESTS,
         videoIds.map(
-            id => `${REMOTE_ASSET_URL}${id}_${itag || ITAG}.json`
+            id => `${REMOTE_JSON_ASSET_URL}${id}_${itag || ITAG}.json`
         )
     )
 
     yield put({
         type: SET_JSON_VIDEO_MANIFESTS,
-        payload: videoManifests,
+        payload: compact(videoManifests),
     })
 
     yield put({

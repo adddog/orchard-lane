@@ -1,5 +1,10 @@
 import { all, call, spawn } from "redux-saga/effects"
 import init from "./init"
+import {
+  playlistModelUpdate,
+  playlistModelIncrement,
+  playbackModelUpdate,
+} from "./videoModel"
 
 /*
 https://github.com/redux-saga/redux-saga/issues/760
@@ -24,7 +29,13 @@ const makeRestartable = saga => {
   }
 }
 
-const rootSagas = [init].map(makeRestartable)
+const rootSagas = [
+  init,
+  playlistModelIncrement,
+  /*playlistModelUpdate,
+  /*playlistModelIncrement,
+  playbackModelUpdate,*/
+].map(makeRestartable)
 
 export default function* root() {
   yield all(rootSagas.map(saga => call(saga)))

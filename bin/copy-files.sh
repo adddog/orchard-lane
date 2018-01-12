@@ -5,3 +5,4 @@ rm -rf client/dist/fonts
 rm -rf client/dist/json
 cp -R client/src/fonts client/dist/fonts
 cp -R client/src/json client/dist/json
+cp -R client/src/videos client/dist/videos

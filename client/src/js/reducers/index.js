@@ -1,6 +1,7 @@
 import { combineReducers } from 'redux';
 import config from './config';
 import mapData from './mapData';
+import general from './general';
 import videoModel from './videoModel';
 import { createResponsiveStateReducer } from 'redux-responsive';
 
@@ -8,6 +9,7 @@ const dashApp = combineReducers({
   config,
   mapData,
   videoModel,
+  general,
   browser: createResponsiveStateReducer({
     mobile: 360,
     phablet: 540,

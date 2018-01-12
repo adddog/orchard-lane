@@ -26,7 +26,7 @@ module.exports = env => {
         ? "'production'"
         : "'development'",
       "process.env.DEV": isDev,
-      "process.env.OFFLINE": false,
+      "process.env.OFFLINE": true,
     })
   )
 
@@ -45,12 +45,6 @@ module.exports = env => {
       css: {
         loader:
           "css-loader?importLoader=1&localIdentName=[name]__[local]___[hash:base64:5]&modules=true&url=false!postcss-loader",
-      },
-      scss: {
-        loader: "css-loader?url=false!sass-loader",
-        options: {
-          importer: jsonImporter,
-        },
       },
     }
 
@@ -257,14 +251,6 @@ alias: {
       new webpack.LoaderOptionsPlugin({
         context: __dirname,
         options: {
-          sassLoader: {
-            assetsUrl: `""`,
-            includePaths: [
-              join(constants.CSS_SRC_DIR),
-              join(constants.CSS_SRC_DIR, "vars"),
-              join(constants.CSS_SRC_DIR, "site"),
-            ],
-          },
           postcss: {
             options: {
               config: {
