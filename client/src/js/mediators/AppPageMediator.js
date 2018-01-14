@@ -18,7 +18,7 @@ import { withRouter } from "react-router-dom"
 
 const makeGUI = process.env.DEV
     ? dispatch => {
-          const dat = require("dat.gui/build/dat.gui.js")
+         /* const dat = require("dat.gui/build/dat.gui.js")
           const boundActions = bindActionCreators({
               nextVideoInPlaylist: incrementPlaylistModel,
           }, dispatch)
@@ -27,7 +27,7 @@ const makeGUI = process.env.DEV
                   boundActions.nextVideoInPlaylist(),
           }
           const gui = new dat.GUI()
-          gui.add(o, "nextVideoInPlaylist")
+          gui.add(o, "nextVideoInPlaylist")*/
       }
     : noop
 

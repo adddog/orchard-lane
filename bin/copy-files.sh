@@ -1,6 +1,6 @@
 #!/usr/bin/env sh
 
-cpy client/src/index.html client/dist
+cp client/src/index.html client/dist
 rm -rf client/dist/fonts
 rm -rf client/dist/json
 cp -R client/src/fonts client/dist/fonts

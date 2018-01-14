@@ -130,6 +130,7 @@ module.exports = env => {
         resolve(`${constants.JS_SRC_DIR}`, "actions"),
         resolve(`${constants.JS_SRC_DIR}`, "components"),
         resolve(`${constants.JS_SRC_DIR}`, "containers"),
+        resolve(`${constants.JS_SRC_DIR}`, "containers/AppPageContainer/orhard/orchardModels"),
         resolve(`${constants.JS_SRC_DIR}`, "modules"),
         resolve(`${constants.JS_SRC_DIR}`, "mediators"),
         resolve(`${constants.JS_SRC_DIR}`, "reducers"),
