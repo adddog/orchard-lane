@@ -1,6 +1,8 @@
 import { REMOTE_VIDEO_ASSET_URL, JSON_URL } from "utils/utils"
-import { last } from "lodash"
+import { last, noop } from "lodash"
 import MediaPlayer from "orchard-lane-media-player"
+//import MediaPlayer from "./bundle.min.js"
+//const MediaPlayer = noop
 import VideoModel from "orchardModels/videoModel"
 import ThreeModel from "orchardModels/threeModel"
 

@@ -130,7 +130,6 @@ module.exports = env => {
         resolve(`${constants.JS_SRC_DIR}`, "actions"),
         resolve(`${constants.JS_SRC_DIR}`, "components"),
         resolve(`${constants.JS_SRC_DIR}`, "containers"),
-        resolve(`${constants.JS_SRC_DIR}`, "containers/AppPageContainer/orhard/orchardModels"),
         resolve(`${constants.JS_SRC_DIR}`, "modules"),
         resolve(`${constants.JS_SRC_DIR}`, "mediators"),
         resolve(`${constants.JS_SRC_DIR}`, "reducers"),
@@ -140,6 +139,45 @@ module.exports = env => {
         resolve(`${constants.JS_SRC_DIR}`, "sagas"),
         resolve(`${constants.JS_SRC_DIR}`, "utils"),
         resolve(`${constants.JS_SRC_DIR}`, "api"),
+
+        resolve(
+          join(
+            `${constants.JS_SRC_DIR}`,
+            "containers",
+            "AppPageContainer"
+          ),
+          "orchard"
+        ),
+
+        resolve(
+          join(
+            `${constants.JS_SRC_DIR}`,
+            "containers",
+            "AppPageContainer",
+            "orchard"
+          ),
+          "threeScene"
+        ),
+
+        resolve(
+          join(
+            `${constants.JS_SRC_DIR}`,
+            "containers",
+            "AppPageContainer",
+            "orchard"
+          ),
+          "videoPlayer"
+        ),
+
+        resolve(
+          join(
+            `${constants.JS_SRC_DIR}`,
+            "containers",
+            "AppPageContainer",
+            "orchard"
+          ),
+          "orchardModels"
+        ),
       ],
     },
     node: {

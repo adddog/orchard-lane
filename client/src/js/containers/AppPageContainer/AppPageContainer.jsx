@@ -1,10 +1,11 @@
 import React, { Component, PropTypes } from "react"
-import { isObject, isUndefined, keys, find } from "lodash"
+import { isObject, isUndefined, keys,noop, find } from "lodash"
 import classnames from "classnames"
 import Q from "bluebird"
 import Xhr from "xhr-request"
 const xhr = Q.promisify(Xhr)
-import ThreeScene from "orchard-lane-three"
+//import ThreeScene from "orchard-lane-three"
+const ThreeScene = noop
 import VideoPlayer from "videoPlayer"
 
 import Scene from "threeScene"
