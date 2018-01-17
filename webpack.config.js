@@ -188,7 +188,15 @@ module.exports = env => {
       rules: [
         {
           test: /\.(js|jsx)$/,
-          exclude: /(node_modules|bower_components)/,
+          //exclude: /(node_modules|bower_components)/,
+          exclude: /node_modules\/(?![orchard-lane-media-player])/,
+          include: [
+            constants.SRC_DIR,
+            join(
+              constants.NODE_MODULES_DIR,
+              "orchard-lane-media-player"
+            ),
+          ],
           use: {
             loader: "babel-loader",
           },
