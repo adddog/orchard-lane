@@ -7,12 +7,13 @@ class OrchardLane {
       throw new Error(`Need to set state, dispatch on the Model first`)
     }
 
-    this.model = new OrchardModel(state, dispatch)
-
+    this.models = new OrchardModel(state, dispatch)
   }
 
   update(state){
-
+    if(this.models){
+      this.models.update(state)
+    }
   }
 
   setActiveVideo(id) {

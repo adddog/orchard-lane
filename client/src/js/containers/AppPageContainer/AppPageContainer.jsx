@@ -3,8 +3,6 @@ import React, { Component } from "react"
 import { isObject, isUndefined, keys,noop, find } from "lodash"
 import classnames from "classnames"
 import Q from "bluebird"
-import Xhr from "xhr-request"
-const xhr = Q.promisify(Xhr)
 import ThreeScene from "orchard-lane-three"
 import VideoPlayer from "videoPlayer"
 
@@ -44,9 +42,6 @@ export default class AppPageContainer extends Component {
 
   componentWillReceiveProps(nextProps) {
     const { general, dispatch } = nextProps
-    console.log("---------------------------------------");
-    console.log(nextProps);
-    console.log("---------------------------------------");
 
     if (
       general.get("loadComplete") &&
@@ -59,7 +54,6 @@ export default class AppPageContainer extends Component {
       const mediaPlayer = new VideoPlayer()
 
       if (this.props.config.get("debug")) {
-        console.log(this.refs);
         //this.refs.testVideo.appendChild(mediaPlayer.mediaSource.el)
         document.body.appendChild(mediaPlayer.mediaSource.el)
       }
@@ -84,9 +78,9 @@ export default class AppPageContainer extends Component {
       OrchardLaneModels.update(nextProps)
     }
   }
+
   shouldComponentUpdate(nextProps) {
     const { general, dispatch } = nextProps
-
 
     return general.get("loadComplete") !==
         this.props.general.get("loadComplete")

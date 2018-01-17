@@ -74,6 +74,7 @@ const VIDEO_PLOT_PATHS = videoIds => {
 }
 
 const VIDEO_MANIFESTS = urls => {
+    console.log(urls);
     return Q.map(
         urls,
         url =>
@@ -120,7 +121,7 @@ function* doInit(action) {
     const videoManifests = yield call(
         VIDEO_MANIFESTS,
         videoIds.map(
-            id => `${REMOTE_JSON_ASSET_URL}${id}_${itag || ITAG}.json`
+            id => `${REMOTE_JSON_ASSET_URL}${id}/${id}_${itag || ITAG}.json`
         )
     )
 

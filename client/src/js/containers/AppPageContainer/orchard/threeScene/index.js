@@ -26,6 +26,7 @@ export function polarToVector3(lon, lat, radius, vector) {
 
 const OrchardLane = threeScene => {
   const { mapData } = ThreeModel
+  console.log(mapData);
   const { currentVideoModelData } = VideoModel
   const rawData = mapData.get("plotPaths")
 

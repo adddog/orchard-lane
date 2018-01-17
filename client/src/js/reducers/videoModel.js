@@ -1,3 +1,4 @@
+import { ASSET_URL } from "utils/utils"
 import {
   SET_JSON_RUN_SETTINGS,
   SET_JSON_VIDEO_MANIFESTS,
@@ -11,6 +12,7 @@ import { Map } from "immutable"
 import { isArray, keys, assign, pick, find, map } from "lodash"
 
 const initialState = new Map({
+  tick: 0,
   runSettings: null,
   videoManifests: null,
   videoJson: null,
@@ -32,13 +34,14 @@ const createVideoPlaylistsModels = playlists => {
   return _o
 }
 
-const createVideoPlaybackModels = videoJson => {
+const createVideoPlaybackModels = (state, videoJson) => {
   const { videoIds, videoData } = videoJson
   const model = {}
   videoIds.forEach(videoId => {
     const d = videoData[videoId] || {}
     model[videoId] = {
       videoId: videoId,
+      url: `${ASSET_URL}videos/${videoId}_${state.get("itag")}`,
       startTime: d.startTime || 0,
       endTime: d.endTime,
       initialRotation: d.initialRotation,
@@ -95,7 +98,7 @@ export default function mapData(state = initialState, action) {
         */
           .set(
             "videoPlaybackModels",
-            createVideoPlaybackModels(payload)
+            createVideoPlaybackModels(state, payload)
           )
           /*
         {
@@ -127,12 +130,17 @@ export default function mapData(state = initialState, action) {
           /*
           Direct on the object
           */
-          trimSidx(videoData[videoManifest.videoId], videoManifest)
+          console.log(videoManifest);
+          const manifest = isArray(videoManifest)
+            ? videoManifest[0]
+            : videoManifest
+          //trimSidx(videoData[manifest.videoId], manifest)
+
           return {
-            ...videoManifest,
+            ...manifest,
             duration: totalVideoDuration(
-              videoData[videoManifest.videoId],
-              videoManifest
+              videoData[manifest.videoId],
+              manifest
             ),
           }
         })
@@ -152,7 +160,6 @@ export default function mapData(state = initialState, action) {
 
           return _accum
         }, {})
-
       return state
         .set("videoManifests", videoManifests)
         .set("videoPlaybackModels", videoPlaybackModels)
@@ -183,7 +190,9 @@ export default function mapData(state = initialState, action) {
         ...videoPlaybackModels[payload.videoId],
         ...payload,
       }
-      return state.set("videoPlaybackModels", videoPlaybackModels)
+      return state
+        .set("videoPlaybackModels", videoPlaybackModels)
+        .set("tick", state.get("tick") + 1)
     }
     case VIDEO_PLAYLIST_MODEL_UPDATE: {
       const { payload } = action

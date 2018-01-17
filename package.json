@@ -14,14 +14,13 @@
   ],
   "license": "MIT",
   "scripts": {
-    "clean-dist": "rimraf client/dist && mkdir client/dist && mkdir client/dist/js",
     "copy-dist-to-server": "rimraf server/static && mkdir server/static && cp -R client/dist/ server/static",
     "copy-files": "chmod +x bin/copy-files.sh && ./bin/copy-files.sh",
     "clean-and-copy": "npm run copy-files",
     "prestart": "npm run clean-and-copy",
     "start": "webpack-dev-server --env.dev  --content-base client/dist",
     "build:js": "webpack --env.prod -p",
-    "build": "npm-run-all -l -s clean-dist clean-and-copy copy-files build:js copy-dist-to-server"
+    "build": "npm-run-all -l -s clean-and-copy copy-files build:js copy-dist-to-server"
   },
   "engines": {
     "node": ">=8.1.3",

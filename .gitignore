@@ -11,6 +11,7 @@ client/dist/images
 client/dist/fonts/
 client/dist/json/
 client/dist/index.html
+client/dist/videos/
 server/static
 
 dev

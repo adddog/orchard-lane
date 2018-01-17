@@ -1,12 +1,11 @@
 import { REMOTE_VIDEO_ASSET_URL, JSON_URL } from "utils/utils"
 import { last, noop } from "lodash"
 import MediaPlayer from "orchard-lane-media-player"
-//import MediaPlayer from "./bundle.min.js"
-//const MediaPlayer = noop
 import VideoModel from "orchardModels/videoModel"
 import ThreeModel from "orchardModels/threeModel"
 
 class VideoPlayer {
+
   constructor() {
     this.currentVideoManifest = VideoModel.getActiveVideoManifest()
 
@@ -15,7 +14,6 @@ class VideoPlayer {
     })
 
     this._addListeners()
-
     this.addReference()
   }
 
@@ -104,8 +102,9 @@ class VideoPlayer {
 
   addReference() {
     const { currentVideo } = VideoModel
+    console.log("-------------------");
     console.log(currentVideo);
-    console.log(VideoModel.playbackModel);
+    console.log("-------------------");
     this._mediaPlayer.addFromReference(
       this.currentVideoManifest,
       currentVideo.currentReference

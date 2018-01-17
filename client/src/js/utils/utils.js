@@ -19,3 +19,7 @@ export const INIT_JSON_URL = process.env.DEV ? "/json/" : ""
 export const JSON_URL = process.env.OFFLINE
   ? `${ASSET_URL}json/`
   : process.env.ASSET_URL
+
+export const VIDEO_URL = process.env.OFFLINE
+  ? `${ASSET_URL}videos/`
+  : process.env.ASSET_URL

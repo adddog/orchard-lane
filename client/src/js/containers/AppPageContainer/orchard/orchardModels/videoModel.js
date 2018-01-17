@@ -40,7 +40,6 @@ class VideoModel {
     this.playlistModel = getActivePlaylistModel(state)
     this.videoManifest = getActiveVideoManifest(state)
     this.playbackModel = getActivePlaybackModel(state)
-    console.log(state);
   }
 
   getActiveVideoManifest() {
