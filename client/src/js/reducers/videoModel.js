@@ -130,7 +130,6 @@ export default function mapData(state = initialState, action) {
           /*
           Direct on the object
           */
-          console.log(videoManifest);
           const manifest = isArray(videoManifest)
             ? videoManifest[0]
             : videoManifest

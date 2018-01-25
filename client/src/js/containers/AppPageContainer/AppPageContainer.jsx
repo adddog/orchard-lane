@@ -58,7 +58,7 @@ export default class AppPageContainer extends Component {
         document.body.appendChild(mediaPlayer.mediaSource.el)
       }
 
-      //this._startScene(mediaPlayer.mediaSource.el)
+    this._startScene(mediaPlayer.mediaSource.el)
 
       /*console.log("------")
       console.log(process.env.OFFLINE)
@@ -91,7 +91,9 @@ export default class AppPageContainer extends Component {
     )
   }
 
-  componentDidUpdate() {}
+  componentDidUpdate() {
+    console.log("componentDidUpdate");
+  }
 
   _render() {
     //<video ref="videoEl" src="orchardlaneModels.mp4" />

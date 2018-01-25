@@ -1,31 +1,42 @@
 export default class BaseModel {
-  init(mapData) {
-    this._mapData = mapData
-    if (this._mapData.size < 1) throw new Error(`No size on mapData`)
+  constructor() {
+    this.listeners = new Map()
   }
 
-  get currentVideoId() {
-    if (this._mapData.size < 1) throw new Error(`No size on mapData`)
-    if (this.observable.videoId) return this.observable.videoId
-    if (this._mapData.get("runSettings").videoId)
-      return this._mapData.get("runSettings").videoId
-    //first of map_data
-    return this._mapData.get("videoIds")[0]
+  on(label, callback) {
+    this.listeners.has(label) || this.listeners.set(label, [])
+    this.listeners.get(label).push(callback)
   }
 
-  get mapData() {
-    return this._mapData
+  off(label, callback) {
+    let listeners = this.listeners.get(label),
+      index
+
+    if (listeners && listeners.length) {
+      index = listeners.reduce((i, listener, index) => {
+        return isFunction(listener) && listener === callback
+          ? (i = index)
+          : i
+      }, -1)
+
+      if (index > -1) {
+        listeners.splice(index, 1)
+        this.listeners.set(label, listeners)
+        return true
+      }
+    }
+    return false
   }
 
-  set observable(o) {
-    this._observable = o
-  }
+  emit(label, ...args) {
+    let listeners = this.listeners.get(label)
 
-  get observable() {
-    return this._observable || {}
-  }
-
-  updateValue(key, val) {
-    this.observable[key] = val
+    if (listeners && listeners.length) {
+      listeners.forEach(listener => {
+        listener(...args)
+      })
+      return true
+    }
+    return false
   }
 }

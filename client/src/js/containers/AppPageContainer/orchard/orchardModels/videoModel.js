@@ -10,7 +10,11 @@ import {
   getActivePlaybackModel,
 } from "selectors/videoModel"
 
-class VideoModel {
+class VideoModel extends BaseModel{
+  constructor() {
+    super()
+  }
+
   init(state, dispatch) {
     this.update(state)
     this.dispatch = dispatch
@@ -40,6 +44,7 @@ class VideoModel {
     this.playlistModel = getActivePlaylistModel(state)
     this.videoManifest = getActiveVideoManifest(state)
     this.playbackModel = getActivePlaybackModel(state)
+    this.emit("update")
   }
 
   getActiveVideoManifest() {

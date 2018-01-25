@@ -26,14 +26,13 @@ export function polarToVector3(lon, lat, radius, vector) {
 
 const OrchardLane = threeScene => {
   const { mapData } = ThreeModel
-  console.log(mapData);
   const { currentVideoModelData } = VideoModel
-  const rawData = mapData.get("plotPaths")
+  /*const rawData = mapData.get("plotPaths")
 
   if (!mapData.size) {
     throw new Error(`ThreeModel hasn't loaded`)
   }
-
+*/
   threeScene.start()
 
   threeScene.scene.setHandlers({
@@ -54,10 +53,10 @@ const OrchardLane = threeScene => {
     },
   })
 
-  threeScene.scene.updateConfig({
+  /*threeScene.scene.updateConfig({
     initialRotation: currentVideoModelData.initialRotation,
-  })
-/*
+  })*/
+  /*
   const { scene } = threeScene.scene.renderingContext
   const material = new THREE.MeshBasicMaterial({
     color: 0xff0000,

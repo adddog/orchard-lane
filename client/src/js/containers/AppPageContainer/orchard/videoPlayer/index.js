@@ -1,5 +1,6 @@
 import { REMOTE_VIDEO_ASSET_URL, JSON_URL } from "utils/utils"
 import { last, noop } from "lodash"
+import { logBlock } from "utils/log"
 import MediaPlayer from "orchard-lane-media-player"
 import VideoModel from "orchardModels/videoModel"
 import ThreeModel from "orchardModels/threeModel"
@@ -7,8 +8,6 @@ import ThreeModel from "orchardModels/threeModel"
 class VideoPlayer {
 
   constructor() {
-    this.currentVideoManifest = VideoModel.getActiveVideoManifest()
-
     this._mediaPlayer = MediaPlayer({
       assetUrl: REMOTE_VIDEO_ASSET_URL,
     })
@@ -24,6 +23,9 @@ class VideoPlayer {
   _addListeners() {
     const { mediaSource } = this._mediaPlayer
     const { observable } = VideoModel
+    VideoModel.on("update",()=>{
+      console.log(this.playbackModel);
+    })
 
     let _newVideo = false
     observable.on("videoId", (value, prev) => {
@@ -37,6 +39,7 @@ class VideoPlayer {
     MEDIA UPDATE LISTENERS
     ******************/
     mediaSource.endingSignal.add(() => {
+      logBlock(`mediaSource endingSignal`);
       VideoModel.incrementReference(1)
       this.addReference()
     })
