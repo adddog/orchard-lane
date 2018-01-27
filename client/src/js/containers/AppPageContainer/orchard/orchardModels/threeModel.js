@@ -9,9 +9,16 @@ const MAP_OFFSET_X = 10
 const MAP_OFFSET_Y = 10
 
 class ThreeModel extends BaseModel {
-  /*
-     WE CAN ATTACH LISTENERS TO THIS MODEL AROUND THE APP
-  */
+   init(state, dispatch) {
+    this.update(state)
+    this.dispatch = dispatch
+  }
+
+  update(state){
+    this.state = state
+    this.emit("update")
+  }
+/*
   init(mapData) {
     super.init(mapData)
     this.observable = observable({
@@ -24,7 +31,7 @@ class ThreeModel extends BaseModel {
       this.observable.wallData = this._getCurrentWallData(value)
     })
   }
-
+*/
   _getCurrentWallData(videoId) {
     return find(this._mapData.get("wallData"), {
       videoId,
@@ -80,11 +87,6 @@ class ThreeModel extends BaseModel {
   timeUpdate(t) {
     const { wallData } = this.observable
     const { videoCurrentTime } = VideoModel.currentVideo
-    /*console.log(
-      "videoStartTime",
-      VideoModel.currentVideo.videoStartTime
-    )
-    console.log("videoCurrentTime", videoCurrentTime)*/
     let _i = 0
     for (
       _i;

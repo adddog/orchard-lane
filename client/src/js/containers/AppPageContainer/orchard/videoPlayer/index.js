@@ -6,7 +6,6 @@ import VideoModel from "orchardModels/videoModel"
 import ThreeModel from "orchardModels/threeModel"
 
 class VideoPlayer {
-
   constructor() {
     this._mediaPlayer = MediaPlayer({
       assetUrl: REMOTE_VIDEO_ASSET_URL,
@@ -23,9 +22,6 @@ class VideoPlayer {
   _addListeners() {
     const { mediaSource } = this._mediaPlayer
     const { observable } = VideoModel
-    VideoModel.on("update",()=>{
-      console.log(this.playbackModel);
-    })
 
     let _newVideo = false
     observable.on("videoId", (value, prev) => {
@@ -39,7 +35,7 @@ class VideoPlayer {
     MEDIA UPDATE LISTENERS
     ******************/
     mediaSource.endingSignal.add(() => {
-      logBlock(`mediaSource endingSignal`);
+      logBlock(`mediaSource endingSignal`)
       VideoModel.incrementReference(1)
       this.addReference()
     })
@@ -105,9 +101,9 @@ class VideoPlayer {
 
   addReference() {
     const { currentVideo } = VideoModel
-    console.log("-------------------");
-    console.log(currentVideo);
-    console.log("-------------------");
+    console.log("-------------------")
+    console.log(currentVideo)
+    console.log("-------------------")
     this._mediaPlayer.addFromReference(
       this.currentVideoManifest,
       currentVideo.currentReference

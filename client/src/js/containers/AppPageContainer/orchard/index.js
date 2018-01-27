@@ -1,18 +1,26 @@
 import OrchardModel from "orchardModels"
+import ThreeScene from "orchard-lane-three"
+import VideoPlayer from "videoPlayer"
+import Scene from "threeScene"
 
 class OrchardLane {
-  start(state, dispatch) {
+  constructor(props, dispatch) {
+    this.models = new OrchardModel(props, dispatch)
 
-    if (!state) {
-      throw new Error(`Need to set state, dispatch on the Model first`)
-    }
+    this.mediaPlayer = new VideoPlayer()
 
-    this.models = new OrchardModel(state, dispatch)
+    const {config, containerEl} = props
+    this.threeSCene = Scene(
+      ThreeScene(this.mediaPlayer.mediaSource.el, containerEl, {
+        hide: config.get("hideVideo"),
+      })
+    )
+
   }
 
-  update(state){
+  update(props){
     if(this.models){
-      this.models.update(state)
+      this.models.update(props)
     }
   }
 
@@ -22,6 +30,7 @@ class OrchardLane {
 
   getPlotProgress(t) {
   }
+
 }
 
-export default new OrchardLane()
+export default OrchardLane

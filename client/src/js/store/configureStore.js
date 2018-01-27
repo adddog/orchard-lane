@@ -31,16 +31,12 @@ export default function configureStore(options = {}) {
 
 
   middlewares.push(
-    /*thunk,
-    promiseMiddleware({
-      promiseTypeSuffixes: ['START', 'SUCCESS', 'ERROR'],
-    }),*/
     routerMiddleware(browserHistory),
     sagaMiddleware,
   );
 
   if (USE_DEV_TOOLS) {
-    middlewares.push(createLogger());
+    //middlewares.push(createLogger());
   }
 
   const store = createStore(

@@ -3,11 +3,8 @@ import React, { Component } from "react"
 import { isObject, isUndefined, keys,noop, find } from "lodash"
 import classnames from "classnames"
 import Q from "bluebird"
-import ThreeScene from "orchard-lane-three"
-import VideoPlayer from "videoPlayer"
 
-import Scene from "threeScene"
-import OrchardLaneModels from "./orchard"
+import OrchardLane from "./orchard"
 
 import styles from "./AppPageContainer.css"
 
@@ -23,59 +20,26 @@ export default class AppPageContainer extends Component {
     super(props)
   }
 
-  _startScene(el) {
-    const { config } = this.props
-    Scene(
-      ThreeScene(el, this.refs.three, {
-        hide: config.get("hideVideo"),
-      })
-    )
-  }
-
-  getOrchardLaneModelProps(props){
+  getOrchardLaneProps(props){
     return {
       updatePlaybackModel: props.updatePlaybackModel,
       mapData: props.mapData,
       videoModel: props.videoModel,
+      containerEl: this.refs.three,
+      config: props.config
     }
   }
 
   componentWillReceiveProps(nextProps) {
     const { general, dispatch } = nextProps
-
     if (
       general.get("loadComplete") &&
       general.get("loadComplete") !==
         this.props.general.get("loadComplete")
     ) {
-
-      OrchardLaneModels.start(this.getOrchardLaneModelProps(nextProps), dispatch)
-
-      const mediaPlayer = new VideoPlayer()
-
-      if (this.props.config.get("debug")) {
-        //this.refs.testVideo.appendChild(mediaPlayer.mediaSource.el)
-        document.body.appendChild(mediaPlayer.mediaSource.el)
-      }
-
-    this._startScene(mediaPlayer.mediaSource.el)
-
-      /*console.log("------")
-      console.log(process.env.OFFLINE)
-
-      if (process.env.OFFLINE) {
-        this._startScene(this.refs.videoEl)
-        let _t = 0
-        setInterval(() => {
-          const nextPoint = OrchardLaneMap.getPlotProgress(_t)
-          if (nextPoint) {
-            Model.updateValue("plotterProgress", nextPoint)
-          }
-          _t += 250
-        }, 250)
-      }*/
-    } else {
-      OrchardLaneModels.update(nextProps)
+      this.orchardLane = new OrchardLane(this.getOrchardLaneProps(nextProps), dispatch)
+    } else if(this.orchardLane){
+      this.orchardLane.update(nextProps)
     }
   }
 
@@ -96,7 +60,7 @@ export default class AppPageContainer extends Component {
   }
 
   _render() {
-    //<video ref="videoEl" src="orchardlaneModels.mp4" />
+    //<video ref="videoEl" src="orchardlane.mp4" />
     return (
       <main
         data-ui-ref="AppContentContainer"

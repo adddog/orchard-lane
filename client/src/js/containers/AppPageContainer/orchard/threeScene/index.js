@@ -1,6 +1,7 @@
 import { isObject, values, keys, pick } from "lodash"
 import ThreeModel from "orchardModels/threeModel"
 import VideoModel from "orchardModels/videoModel"
+import {logBlock} from "utils/log"
 
 import Walls from "./walls"
 import Floor from "./floor"
@@ -25,14 +26,13 @@ export function polarToVector3(lon, lat, radius, vector) {
 }
 
 const OrchardLane = threeScene => {
-  const { mapData } = ThreeModel
+  /* const { mapData } = ThreeModel
   const { currentVideoModelData } = VideoModel
-  /*const rawData = mapData.get("plotPaths")
+  const rawData = mapData.get("plotPaths")
 
   if (!mapData.size) {
     throw new Error(`ThreeModel hasn't loaded`)
-  }
-*/
+  }*/
   threeScene.start()
 
   threeScene.scene.setHandlers({
@@ -51,6 +51,11 @@ const OrchardLane = threeScene => {
         }
       }
     },
+  })
+
+  ThreeModel.on("update", () => {
+    logBlock("UPDATE")
+    console.log(ThreeModel.state.mapData.get("plotPaths"))
   })
 
   /*threeScene.scene.updateConfig({
