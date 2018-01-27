@@ -1,7 +1,7 @@
 import { VIDEO_URL } from "utils/utils"
 import { merge } from "lodash"
 
-export const getVideoFormatString = state =>{
+export const getVideoFormatString = state => {
   const videoId = getActivePlaybackModel(state).videoId
   return `${videoId}/${videoId}_${getItag(state)}`
 }
@@ -43,6 +43,8 @@ export const getActiveVideoManifest = state =>
 export const getActivePlaybackModel = state =>
   !state
     ? null
-    : state.videoModel.get("videoPlaybackModels")[
-        getActivePlaylistVideoId(state)
-      ]
+    : state.videoModel.get("videoPlaybackModels")
+      ? state.videoModel.get("videoPlaybackModels")[
+          getActivePlaylistVideoId(state)
+        ]
+      : null

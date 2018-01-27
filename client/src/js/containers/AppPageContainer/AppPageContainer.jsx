@@ -23,6 +23,7 @@ export default class AppPageContainer extends Component {
   getOrchardLaneProps(props){
     return {
       updatePlaybackModel: props.updatePlaybackModel,
+      activePlaybackModel: props.activePlaybackModel,
       mapData: props.mapData,
       videoModel: props.videoModel,
       containerEl: this.refs.three,
@@ -39,7 +40,7 @@ export default class AppPageContainer extends Component {
     ) {
       this.orchardLane = new OrchardLane(this.getOrchardLaneProps(nextProps), dispatch)
     } else if(this.orchardLane){
-      this.orchardLane.update(nextProps)
+      this.orchardLane.update(this.getOrchardLaneProps(nextProps))
     }
   }
 

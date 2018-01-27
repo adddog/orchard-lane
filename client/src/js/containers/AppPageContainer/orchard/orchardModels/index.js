@@ -11,4 +11,10 @@ export default class OrchardModel {
     VideoModel.update(props)
     ThreeModel.update(props)
   }
+
+  createProps(props){
+    return {
+      ...props,
+    }
+  }
 }

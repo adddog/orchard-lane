@@ -52,7 +52,7 @@ const VIDEO_PLOT_PATHS = videoIds => {
     return Q.map(
         videoIds,
         id =>
-            JsonApiRequest(`${INIT_JSON_URL}${id}.json`)
+            JsonApiRequest(`${INIT_JSON_URL}${id}/${id}_wall.json`)
                 .catch(err => null)
                 .then(d => {
                     if (!d) return null

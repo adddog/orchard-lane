@@ -1,6 +1,7 @@
 import observable from "proxy-observable"
 import { keys, assign, find, last } from "lodash"
 import { vec2 } from "gl-matrix"
+import { getActiveWallData } from "selectors/threeModel"
 import math from "usfl/math"
 import BaseModel from "./baseModel"
 import VideoModel from "orchardModels/videoModel"
@@ -9,58 +10,61 @@ const MAP_OFFSET_X = 10
 const MAP_OFFSET_Y = 10
 
 class ThreeModel extends BaseModel {
-   init(state, dispatch) {
-    this.update(state)
+  init(store, dispatch) {
+    this.update(store)
     this.dispatch = dispatch
+    this.state = observable({
+      plotterProgress: 0,
+      faceIndex: 0,
+    })
   }
 
-  update(state){
-    this.state = state
+  update(store) {
+    this.store = store
+    this.currentWallData = getActiveWallData(this.store)
+    this.timeUpdate(this.store.activePlaybackModel)
     this.emit("update")
   }
-/*
+  /*
   init(mapData) {
     super.init(mapData)
-    this.observable = observable({
+    this.state = observable({
       plotterProgress: 0,
       faceIndex: 0,
       wallData: this._getCurrentWallData(this.currentVideoId),
     })
 
     VideoModel.observable.on("videoId", value => {
-      this.observable.wallData = this._getCurrentWallData(value)
+      this.state.wallData = this._getCurrentWallData(value)
     })
   }
 */
-  _getCurrentWallData(videoId) {
-    return find(this._mapData.get("wallData"), {
-      videoId,
-    })
+
+  get mapData() {
+    return this.store.mapData
   }
 
-  get videoData() {
-    return this.observable.wallData
-  }
-
-  get previousPlotterPoint(){
-    return this._previousPlotterPoint || {
-      angle:0
-    }
+  get previousPlotterPoint() {
+    return (
+      this._previousPlotterPoint || {
+        angle: 0,
+      }
+    )
   }
 
   /*
   WHERE IN THE SVH PLOTTER ARE WE
   */
   get currentPlotterPoint() {
-    const plotterProgress = this.observable.plotterProgress
+    const plotterProgress = this.state.plotterProgress
     const index = Math.floor(
-      (this.observable._getCurrentWallData.points.length - 1) * plotterProgress
+      (this.currentWallData.points.length - 1) * plotterProgress
     )
 
-    const previousPoint = this.observable.wallData.points[index - 1]
+    const previousPoint = this.currentWallData.points[index - 1]
     const o = {
       angle: 0,
-      ...this.observable.wallData.points[index],
+      ...this.currentWallData.points[index],
     }
 
     o.x += MAP_OFFSET_X
@@ -84,8 +88,9 @@ class ThreeModel extends BaseModel {
     return o
   }
 
-  timeUpdate(t) {
-    const { wallData } = this.observable
+  timeUpdate(activePlaybackModel) {
+    console.log(this.currentWallData);
+    const { wallData } = this.state
     const { videoCurrentTime } = VideoModel.currentVideo
     let _i = 0
     for (
@@ -113,7 +118,7 @@ class ThreeModel extends BaseModel {
       (videoCurrentTime - cuepoint.time) /
       (nextCuepointTime - cuepoint.time)
 
-    this.observable.plotterProgress = math.lerp(
+    this.state.plotterProgress = math.lerp(
       cuepoint.val,
       nextCuepoint.val,
       progress
@@ -121,7 +126,7 @@ class ThreeModel extends BaseModel {
   }
 
   updateValue(key, val) {
-    this.observable[key] = val
+    this.state[key] = val
   }
 }
 

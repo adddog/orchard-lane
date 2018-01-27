@@ -1,3 +1,4 @@
+import observable from "proxy-observable"
 export default class BaseModel {
   constructor() {
     this.listeners = new Map()
