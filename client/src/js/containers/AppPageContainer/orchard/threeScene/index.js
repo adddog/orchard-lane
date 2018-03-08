@@ -27,13 +27,6 @@ export function polarToVector3(lon, lat, radius, vector) {
 
 export default class OrchardLane {
   constructor(threeScene) {
-    /* const { mapData } = ThreeModel
-  const { currentVideoModelData } = VideoModel
-  const rawData = mapData.get("plotPaths")
-
-  if (!mapData.size) {
-    throw new Error(`ThreeModel hasn't loaded`)
-  }*/
     threeScene.start()
 
     threeScene.scene.setHandlers({
@@ -59,10 +52,13 @@ export default class OrchardLane {
 
       const angleDifference =
         previousPlotterPoint.angle - currentPlotterPoint.angle
-
       threeScene.scene.renderingContext.controls.lon.add(
         angleDifference * 360
       )
+
+      console.log("==========")
+      console.log(angleDifference)
+      console.log("==========")
 
       if (currentPlotterPoint) {
         group.position.x = -currentPlotterPoint.y
@@ -86,7 +82,9 @@ export default class OrchardLane {
       color: 0xff0000,
       side: THREE.DoubleSide,
     })
-
+    /*************
+        walls
+    *************/
     var group = new THREE.Group()
     scene.add(group)
 
@@ -94,9 +92,11 @@ export default class OrchardLane {
     floor.rotateX(Math.PI / 2)
     floor.position.y = -3
     group.add(floor)
-    const walls = Walls(ThreeModel.mapData.get("wallData")).map(({ mesh }) => {
-      group.add(mesh)
-    })
+    const walls = Walls(ThreeModel.mapData.get("wallData")).map(
+      ({ mesh }) => {
+        group.add(mesh)
+      }
+    )
 
     VideoModel.observable.on("videoId", (value, prev) => {
       const { currentVideoModelData } = VideoModel
@@ -112,7 +112,7 @@ export default class OrchardLane {
     ThreeModel.state.on("plotterProgress", (value, prev) => {
       const { previousPlotterPoint, currentPlotterPoint } = ThreeModel
 
-      console.log(currentPlotterPoint);
+      console.log(currentPlotterPoint)
 
       const angleDifference =
         previousPlotterPoint.angle - currentPlotterPoint.angle

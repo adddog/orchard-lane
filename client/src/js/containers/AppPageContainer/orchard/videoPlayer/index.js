@@ -42,17 +42,8 @@ class VideoPlayer {
 
     mediaSource.timeUpdateSignal.add(t => {
       VideoModel.timeUpdate(t)
-      //ThreeModel.timeUpdate(t)
-      /*let _previousTime = null
-      if (_previousTime !== t) {
-        Model.updateValue(
-          "plotterProgress",
-          OrchardLaneMap.getPlotProgress(t * 1000)
-        )
-      }
-      Model.updateValue("videoProgress", t)
-      _previousTime = t*/
     })
+
     mediaSource.segmentAddedSignal.add(t => {
       if (_newVideo) {
         mediaSource.currentTime = last(

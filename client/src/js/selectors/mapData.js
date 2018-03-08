@@ -1,4 +1,5 @@
 import { last } from "lodash"
+import { vec2 } from "gl-matrix"
 import math from "usfl/math"
 import { getActivePlaylistVideoId } from "selectors/videoModel"
 import { getActiveWallData } from "selectors/threeModel"
@@ -15,6 +16,9 @@ export const getActivePlaybackMapData = state => {
     : null
 }
 
+/*************
+
+*************/
 export const getTotalPlotProgress = (state, currentTime) => {
   const activeMapData = getActivePlaybackMapData(state)
   const activeWallData = getActiveWallData(state)
@@ -35,17 +39,13 @@ export const getTotalPlotProgress = (state, currentTime) => {
   const progress =
     (currentTime - cuepoint.time) / (nextCuepointTime - cuepoint.time)
 
-  console.log("progress", progress)
-
   const lerpedVal = math.lerp(
     cuepoint.val,
     nextCuepoint.val,
     progress
   )
 
-  console.log(lerpedVal)
-
-  return
+  return lerpedVal
 
   console.log(points)
   for (var i = 0; i < points.length; i++) {

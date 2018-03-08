@@ -2,7 +2,10 @@ import observable from "proxy-observable"
 import { keys, assign, find, last } from "lodash"
 import { vec2 } from "gl-matrix"
 import { getActiveWallData } from "selectors/threeModel"
-import { getTotalPlotProgress , getPlotterPointByProgress} from "selectors/mapData"
+import {
+  getTotalPlotProgress,
+  getPlotterPointByProgress,
+} from "selectors/mapData"
 import math from "usfl/math"
 import BaseModel from "./baseModel"
 import VideoModel from "orchardModels/videoModel"
@@ -21,22 +24,8 @@ class ThreeModel extends BaseModel {
     this.store = store
     this.currentWallData = getActiveWallData(this.store)
     this.timeUpdate(this.store.activePlaybackModel)
-    //this.emit("update")
+    this.emit("update")
   }
-  /*
-  init(mapData) {
-    super.init(mapData)
-    this.state = observable({
-      plotterProgress: 0,
-      faceIndex: 0,
-      wallData: this._getCurrentWallData(this.currentVideoId),
-    })
-
-    VideoModel.observable.on("videoId", value => {
-      this.state.wallData = this._getCurrentWallData(value)
-    })
-  }
-*/
 
   get mapData() {
     return this.store.mapData
@@ -50,16 +39,20 @@ class ThreeModel extends BaseModel {
     )
   }
 
+  get currentPlotterPoint() {
+    return this._currentPlotterPoint || this.previousPlotterPoint
+  }
+
   timeUpdate(activePlaybackModel) {
-    return
     const { activeMapData } = this.state
     const { videoCurrentTime } = activePlaybackModel
+    this._previousPlotterPoint = this.currentPlotterPoint
     const plotterPointByProgress = getPlotterPointByProgress(
       this.store,
       getTotalPlotProgress(this.store, videoCurrentTime),
       this.currentWallData
     )
-    console.log(plotterPointByProgress)
+    this._currentPlotterPoint = plotterPointByProgress
     return
     let _i = 0
     for (
