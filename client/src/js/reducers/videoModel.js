@@ -159,6 +159,7 @@ export default function mapData(state = initialState, action) {
 
           return _accum
         }, {})
+        console.log(videoManifests);
       return state
         .set("videoManifests", videoManifests)
         .set("videoPlaybackModels", videoPlaybackModels)

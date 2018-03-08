@@ -38,7 +38,7 @@ const RUN = () => {
 }
 
 const MAP_DATA = () => {
-    return JsonApiRequest(`${INIT_JSON_URL}map_data.json`)
+    return JsonApiRequest(`${INIT_JSON_URL}playback_map_data.json`)
 }
 
 const VIDEO_DATA = () => {

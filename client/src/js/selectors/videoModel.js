@@ -14,9 +14,11 @@ export const getItag = state => state.videoModel.get("itag")
 export const getActivePlaylistModel = state =>
   !state
     ? null
-    : state.videoModel.get("videoPlaylistModels")[
-        state.videoModel.get("activePlaylist")
-      ]
+    : state.videoModel.get("videoPlaybackModels")
+      ? state.videoModel.get("videoPlaylistModels")[
+          state.videoModel.get("activePlaylist")
+        ]
+      : null
 
 export const getVideoUrl = state => {
   const model = getActivePlaylistModel(state)
@@ -25,7 +27,7 @@ export const getVideoUrl = state => {
 
 export const getActivePlaylistVideoId = state => {
   const model = getActivePlaylistModel(state)
-  return model.playlist[model.videoIndex]
+  return !!model ? model.playlist[model.videoIndex] : null
 }
 
 export const getActiveVideoManifest = state =>
