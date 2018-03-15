@@ -10,6 +10,7 @@ class OrchardLane {
     this.mediaPlayer = new VideoPlayer()
 
     const {config, containerEl} = props
+
     this.threeSCene = new Scene(
       ThreeScene(this.mediaPlayer.mediaSource.el, containerEl, {
         hide: config.get("hideVideo"),

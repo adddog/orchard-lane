@@ -31,6 +31,7 @@
   },
   "videoData": {
     "R4-XIR7b-Qo": {
+      "initialRotation": 180,
       "startTime": 39,
       "endTime": 701
     },

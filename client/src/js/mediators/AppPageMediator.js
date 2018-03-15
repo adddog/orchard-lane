@@ -14,9 +14,7 @@ import {
   updatePlaylistModel,
   incrementPlaylistModel,
 } from "actions/videoModel"
-import {
-  getActivePlaybackModel,
-} from "selectors/videoModel"
+import { getActivePlaybackModel } from "selectors/videoModel"
 import { withRouter } from "react-router-dom"
 
 const makeGUI = process.env.DEV

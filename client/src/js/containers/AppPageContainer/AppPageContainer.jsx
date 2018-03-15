@@ -22,6 +22,7 @@ export default class AppPageContainer extends Component {
 
   getOrchardLaneProps(props){
     return {
+      updatePlaylistModel: props.updatePlaylistModel,
       updatePlaybackModel: props.updatePlaybackModel,
       activePlaybackModel: props.activePlaybackModel,
       mapData: props.mapData,

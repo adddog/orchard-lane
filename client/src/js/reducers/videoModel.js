@@ -3,6 +3,7 @@ import {
   SET_JSON_RUN_SETTINGS,
   SET_JSON_VIDEO_MANIFESTS,
   JSON_VIDEO_DATA_SUCCESS,
+  VIDEO_VIDEO_ID_SET,
   VIDEO_PLAYBACK_MODEL_UPDATE,
   VIDEO_PLAYLIST_MODEL_UPDATE,
   INIT_LOAD_COMPLETE,
@@ -41,10 +42,12 @@ const createVideoPlaybackModels = (state, videoJson) => {
     const d = videoData[videoId] || {}
     model[videoId] = {
       videoId: videoId,
-      url: `${ASSET_URL}videos/${videoId}_${state.get("itag")}`,
+      url: `${ASSET_URL}videos/${videoId}/${videoId}_${state.get(
+        "itag"
+      )}`,
       startTime: d.startTime || 0,
       endTime: d.endTime,
-      initialRotation: d.initialRotation,
+      initialRotation: d.initialRotation || 0,
       videoStartTime: 0,
       videoCurrentTime: 0,
       videoProgress: 0,
@@ -76,6 +79,9 @@ const trimSidx = (videoData, videoManifest) => {
 
 export default function mapData(state = initialState, action) {
   switch (action.type) {
+    /*************
+        INIT
+    *************/
     case SET_JSON_RUN_SETTINGS: {
       const { payload } = action
       return state
@@ -159,7 +165,7 @@ export default function mapData(state = initialState, action) {
 
           return _accum
         }, {})
-        console.log(videoManifests);
+
       return state
         .set("videoManifests", videoManifests)
         .set("videoPlaybackModels", videoPlaybackModels)
@@ -183,6 +189,10 @@ export default function mapData(state = initialState, action) {
     UPDATE
     //************
     */
+    case VIDEO_VIDEO_ID_SET: {
+      console.log(action.payload);
+      return state.set("videoId", action.payload)
+    }
     case VIDEO_PLAYBACK_MODEL_UPDATE: {
       const { payload } = action
       const videoPlaybackModels = state.get("videoPlaybackModels")

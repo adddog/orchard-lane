@@ -84,11 +84,17 @@ class VideoModel extends BaseModel{
 
   incrementReference(count) {
     count += 1
+    /**~~~~**
+        next video in playlist
+    **~~~~**/
     if (count > this.videoManifest.sidx.references.length - 1) {
       this.state.updatePlaylistModel({
         videoIndex: this.playlistModel.videoIndex++,
       })
     } else {
+      /**~~~~**
+          next reference
+      **~~~~**/
       this.state.updatePlaybackModel({
         videoId: this.playbackModel.videoId,
         currentReference: this.playbackModel.currentReference.map(
