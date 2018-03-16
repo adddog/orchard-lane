@@ -24,7 +24,7 @@ class VideoModel extends BaseModel{
       videoId: getActivePlaylistVideoId(state),
     })
 
-    this.observable.on("videoId", value => {
+    /*this.observable.on("videoId", value => {
       const refI = Math.floor(
         (this._currentVideoManifest.sidx.references.length - 1) *
           ThreeModel.observable.faceIndex
@@ -33,7 +33,7 @@ class VideoModel extends BaseModel{
       this.observable[value].videoStartTime = last(
         this.playbackTimecodes
       )
-    })
+    })*/
 
     this.playbackTimecodes = []
     this.playbackDict = []
@@ -107,7 +107,6 @@ class VideoModel extends BaseModel{
   get currentVideo() {
     return this.playbackModel
   }
-
 }
 
 const getRefDuration = (currentVideoManifest, currentVideo) => {

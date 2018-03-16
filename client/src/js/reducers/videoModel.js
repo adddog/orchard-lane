@@ -9,7 +9,7 @@ import {
   INIT_LOAD_COMPLETE,
 } from "actions/actionTypes"
 
-import { Map } from "immutable"
+import { Map, List } from "immutable"
 import { isArray, keys, assign, pick, find, map } from "lodash"
 
 const initialState = new Map({
@@ -17,6 +17,7 @@ const initialState = new Map({
   runSettings: null,
   videoManifests: null,
   videoJson: null,
+  videoHistoryPlaybackModels: new List(),
   videoPlaybackModels: null,
   videoPlaylistModels: null,
   itag: Detector.isMobile ? "137" : "266",
@@ -190,7 +191,6 @@ export default function mapData(state = initialState, action) {
     //************
     */
     case VIDEO_VIDEO_ID_SET: {
-      console.log(action.payload);
       return state.set("videoId", action.payload)
     }
     case VIDEO_PLAYBACK_MODEL_UPDATE: {
@@ -206,16 +206,31 @@ export default function mapData(state = initialState, action) {
     }
     case VIDEO_PLAYLIST_MODEL_UPDATE: {
       const { payload } = action
+
       const videoPlaylistModel = {
         ...state.get("videoPlaylistModels")[
           state.get("activePlaylist")
         ],
         ...payload,
       }
-      return state.set("videoPlaylistModels", {
-        ...state.get("videoPlaylistModels"),
-        [state.get("activePlaylist")]: videoPlaylistModel,
-      })
+
+      return state
+        .set("videoPlaylistModels", {
+          ...state.get("videoPlaylistModels"),
+          [state.get("activePlaylist")]: videoPlaylistModel,
+        })
+        /**~~~~**
+            store previous models
+        **~~~~**/
+        .set(
+          state
+            .get("videoHistoryPlaybackModels")
+            .push(
+              state.get("videoPlaylistModels")[
+                state.get("activePlaylist")
+              ]
+            )
+        )
     }
     default: {
       return state

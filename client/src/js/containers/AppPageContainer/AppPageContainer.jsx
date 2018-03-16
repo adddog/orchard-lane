@@ -58,7 +58,6 @@ export default class AppPageContainer extends Component {
   }
 
   componentDidUpdate() {
-    console.log("componentDidUpdate");
   }
 
   _render() {
@@ -75,10 +74,6 @@ export default class AppPageContainer extends Component {
             "u-container full u-flex",
           ])}
           data-ui-ref="AppContent"
-        />
-        <div
-          ref="testVideo"
-          className={classnames([styles.testVideo])}
         />
       </main>
     )

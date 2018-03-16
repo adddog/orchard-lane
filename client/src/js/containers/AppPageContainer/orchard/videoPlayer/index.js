@@ -11,6 +11,7 @@ class VideoPlayer {
       assetUrl: REMOTE_VIDEO_ASSET_URL,
     })
 
+    this._previousVideoVo = {};
     this._addListeners()
     this.addReference()
   }
@@ -23,13 +24,14 @@ class VideoPlayer {
     const { mediaSource } = this._mediaPlayer
     const { observable } = VideoModel
 
-    let _newVideo = false
+   /* let _newVideo = false
     observable.on("videoId", (value, prev) => {
       _newVideo = true
+      console.log(this.currentVideoManifest);
       this.currentVideoManifest = VideoModel.getCurrentVideoManifest(
         value
       )
-    })
+    })*/
 
     /******************
     MEDIA UPDATE LISTENERS
@@ -45,12 +47,12 @@ class VideoPlayer {
     })
 
     mediaSource.segmentAddedSignal.add(t => {
-      if (_newVideo) {
+     /* if (_newVideo) {
         mediaSource.currentTime = last(
           VideoModel.playbackTimecodes
         ).toFixed(3)
       }
-      _newVideo = false
+      _newVideo = false*/
       VideoModel.referenceAdded()
     })
   }
@@ -97,8 +99,11 @@ class VideoPlayer {
     console.log("-------------------")
     this._mediaPlayer.addFromReference(
       this.currentVideoManifest,
-      currentVideo.currentReference
+      currentVideo.currentReference,
+      //teardown
+      this._previousVideoVo.videoId !== currentVideo.videoId
     )
+    this._previousVideoVo = currentVideo
   }
 }
 

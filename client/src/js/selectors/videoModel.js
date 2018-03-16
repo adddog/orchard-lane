@@ -43,6 +43,7 @@ export const getActivePlaylistVideoId = state => {
   return !!model ? model.playlist[model.videoIndex] : null
 }
 
+
 /*************
     models
 *************/
