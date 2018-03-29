@@ -1,4 +1,5 @@
-import { ASSET_URL } from "utils/utils"
+import QS from "query-string"
+import { ASSET_URL, VIDEO_URL } from "utils/utils"
 import {
   SET_JSON_RUN_SETTINGS,
   SET_JSON_VIDEO_MANIFESTS,
@@ -43,11 +44,13 @@ const createVideoPlaybackModels = (state, videoJson) => {
     const d = videoData[videoId] || {}
     model[videoId] = {
       videoId: videoId,
-      url: `${ASSET_URL}videos/${videoId}/${videoId}_${state.get(
+      nonDashUrl: `${VIDEO_URL}${videoId}/${videoId}.mp4`,
+      url: `${VIDEO_URL}${videoId}/${videoId}_${state.get(
         "itag"
       )}`,
       startTime: d.startTime || 0,
       endTime: d.endTime,
+      hotspots: d.hotspots,
       initialRotation: d.initialRotation || 0,
       videoStartTime: 0,
       videoCurrentTime: 0,
@@ -89,6 +92,7 @@ export default function mapData(state = initialState, action) {
         .set("runSettings", {
           ...state.get("runSettings"),
           ...payload,
+          ...QS.parse(window.location.search),
         })
         .set("videoId", payload.videoId ? payload.videoId : "")
         .set("itag", payload.itag ? payload.itag : state.get("itag"))
@@ -166,7 +170,7 @@ export default function mapData(state = initialState, action) {
 
           return _accum
         }, {})
-
+        console.log(videoPlaybackModels);
       return state
         .set("videoManifests", videoManifests)
         .set("videoPlaybackModels", videoPlaybackModels)
@@ -206,7 +210,6 @@ export default function mapData(state = initialState, action) {
     }
     case VIDEO_PLAYLIST_MODEL_UPDATE: {
       const { payload } = action
-
       const videoPlaylistModel = {
         ...state.get("videoPlaylistModels")[
           state.get("activePlaylist")
@@ -214,23 +217,25 @@ export default function mapData(state = initialState, action) {
         ...payload,
       }
 
-      return state
-        .set("videoPlaylistModels", {
-          ...state.get("videoPlaylistModels"),
-          [state.get("activePlaylist")]: videoPlaylistModel,
-        })
-        /**~~~~**
+      return (
+        state
+          .set("videoPlaylistModels", {
+            ...state.get("videoPlaylistModels"),
+            [state.get("activePlaylist")]: videoPlaylistModel,
+          })
+          /**~~~~**
             store previous models
         **~~~~**/
-        .set(
-          state
-            .get("videoHistoryPlaybackModels")
-            .push(
-              state.get("videoPlaylistModels")[
-                state.get("activePlaylist")
-              ]
-            )
-        )
+          .set(
+            state
+              .get("videoHistoryPlaybackModels")
+              .push(
+                state.get("videoPlaylistModels")[
+                  state.get("activePlaylist")
+                ]
+              )
+          )
+      )
     }
     default: {
       return state

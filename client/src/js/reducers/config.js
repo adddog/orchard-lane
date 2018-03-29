@@ -2,6 +2,7 @@ import QS from "query-string"
 import { Map } from "immutable"
 const parsed = QS.parse(window.location.search)
 const initialState = new Map({
+  noWalls: true,
   hideVideo: !!parsed.hideVideo,
   showDevMap: !!parsed.debug,
   debug: !!parsed.debug,

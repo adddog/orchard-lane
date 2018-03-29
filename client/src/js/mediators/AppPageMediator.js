@@ -37,6 +37,7 @@ const mapStateToProps = () => {
     return {
       activePlaybackModel: getActivePlaybackModel(state),
       general: state.general,
+      hotspotFontJSON: state.general.get('hotspotFontJSON'),
       config: state.config,
       videoModel: state.videoModel,
       mapData: state.mapData,

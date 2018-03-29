@@ -7,8 +7,7 @@ const _ = require("lodash")
 const webpack = require("webpack")
 const HtmlWebpackPlugin = require("html-webpack-plugin")
 const ExtractTextPlugin = require("extract-text-webpack-plugin")
-const UglifyJSPlugin = require("uglifyjs-webpack-plugin")
-const postcssEasings = require("postcss-easings")
+const UglifyJsWebpackPlugin = require("uglifyjs-webpack-plugin")
 
 module.exports = env => {
   const isDev = !!env.dev
@@ -98,7 +97,14 @@ module.exports = env => {
   return {
     entry: {
       app: `${constants.SRC_DIR}/js/index.jsx`,
-      vendor: ["immutable", "lodash", "react", "redux", "redux-saga"],
+      vendor: [
+        "immutable",
+        "lodash",
+        "react",
+        "redux",
+        "redux-saga",
+        "orchard-lane-three",
+      ],
     },
     node: {
       dns: "mock",
@@ -109,6 +115,30 @@ module.exports = env => {
       path: resolve(__dirname, constants.DIST),
       publicPath: "",
       pathinfo: !env.prod,
+    },
+    optimization: {
+      minimizer: ifProd([
+        new UglifyJsWebpackPlugin({
+          parallel: true, // uses all cores available on given machine
+          sourceMap: false,
+        }),
+      ]),
+      splitChunks: {
+        cacheGroups: {
+          default: {
+            chunks: "initial",
+            name: "bundle",
+            priority: -20,
+            reuseExistingChunk: true,
+          },
+          vendor: {
+            chunks: "initial",
+            name: "vendor",
+            priority: -10,
+            test: /node_modules\/(.*)\.js/,
+          },
+        },
+      },
     },
     context: constants.SRC_DIR,
     devtool: env.prod ? "source-map" : "eval",
@@ -121,6 +151,7 @@ module.exports = env => {
       historyApiFallback: !!env.dev,
       port: 8081,
     },
+    mode: isDev ? "development" : "production",
     bail: env.prod,
     resolve: {
       extensions: [".js", ".jsx"],
@@ -213,6 +244,7 @@ module.exports = env => {
       ifProd(
         new HtmlWebpackPlugin({
           assetsUrl: `""`,
+          env: process.env,
           template: "./index.ejs", // Load a custom template (ejs by default see the FAQ for details)
         })
       ),
@@ -230,37 +262,7 @@ module.exports = env => {
           quiet: true,
         })
       ),
-      ifProd(
-        isDebug
-          ? undefined
-          : new UglifyJSPlugin({
-              sourceMap: true,
-              compress: {
-                warnings: false,
-                screw_ie8: true,
-                conditionals: true,
-                unused: true,
-                comparisons: true,
-                sequences: true,
-                dead_code: true,
-                evaluate: true,
-                if_return: true,
-                join_vars: true,
-              },
-            })
-      ),
       DefineENV,
-      ifNotTest(
-        new webpack.optimize.CommonsChunkPlugin({
-          name: "vendor",
-        })
-      ),
-      ifNotTest(
-        new webpack.optimize.CommonsChunkPlugin({
-          name: "common",
-          fileName: "bundle.common.js",
-        })
-      ),
       new webpack.LoaderOptionsPlugin({
         context: __dirname,
         options: {

@@ -23,6 +23,7 @@ import {
     SET_JSON_RUN_SETTINGS,
     JSON_LOAD_MAP_DATA_SUCCESS,
     JSON_VIDEO_DATA_SUCCESS,
+    THREE_JSON_FONT_SUCCESS,
     SET_MAP_DATA_PLOT_PATHS,
     SET_JSON_VIDEO_MANIFESTS,
     INIT_LOAD_COMPLETE,
@@ -43,6 +44,10 @@ const MAP_DATA = () => {
 
 const VIDEO_DATA = () => {
     return JsonApiRequest(`${INIT_JSON_URL}videos.json`)
+}
+
+const THREE_JSON_FONT = () => {
+    return JsonApiRequest(`${INIT_JSON_URL}Asap_Regular.json`)
 }
 
 /*
@@ -74,7 +79,6 @@ const VIDEO_PLOT_PATHS = videoIds => {
 }
 
 const VIDEO_MANIFESTS = urls => {
-    console.log(urls);
     return Q.map(
         urls,
         url =>
@@ -92,7 +96,7 @@ const VIDEO_MANIFESTS = urls => {
 
 function* doInit(action) {
     const jsonLoaded = yield all(
-        [RUN, MAP_DATA, VIDEO_DATA].map(saga => call(saga))
+        [RUN, MAP_DATA, VIDEO_DATA, THREE_JSON_FONT].map(saga => call(saga))
     )
     yield put({
         type: SET_JSON_RUN_SETTINGS,
@@ -105,6 +109,10 @@ function* doInit(action) {
     yield put({
         type: JSON_VIDEO_DATA_SUCCESS,
         payload: jsonLoaded[2],
+    })
+    yield put({
+        type: THREE_JSON_FONT_SUCCESS,
+        payload: jsonLoaded[3],
     })
 
     const videoIds = yield select(getAllVideoIds)

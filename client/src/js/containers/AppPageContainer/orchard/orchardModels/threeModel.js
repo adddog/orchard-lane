@@ -13,6 +13,7 @@ import VideoModel from "orchardModels/videoModel"
 class ThreeModel extends BaseModel {
   init(store, dispatch) {
     this.state = observable({
+      hasUpdated: false,
       plotterProgress: 0,
       faceIndex: 0,
     })
@@ -21,6 +22,14 @@ class ThreeModel extends BaseModel {
   }
 
   update(store) {
+    if (
+      this.store &&
+      this.store.activePlaybackModel &&
+      this.store.activePlaybackModel.videoId !==
+        store.activePlaybackModel.videoId
+    ) {
+       this.state.hasUpdated = true
+    }
     this.store = store
     this.currentWallData = getActiveWallData(this.store)
     this.timeUpdate(this.store.activePlaybackModel)

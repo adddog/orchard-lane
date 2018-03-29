@@ -1,4 +1,4 @@
-import { isObject, values, keys, pick } from "lodash"
+import { isObject, values, keys, pick, noop } from "lodash"
 import { getVideoIndexInPlaylistByVideoId } from "selectors/videoModel"
 import ThreeModel from "orchardModels/threeModel"
 import VideoModel from "orchardModels/videoModel"
@@ -12,84 +12,66 @@ import Q from "bluebird"
 import Xhr from "xhr-request"
 const xhr = Q.promisify(Xhr)
 
-export function polarToVector3(lon, lat, radius, vector) {
-  vector = vector || new Vector3()
-  const phi = THREE.Math.degToRad(90 - lat)
-  const theta = THREE.Math.degToRad(lon)
-
-  vector.set(
-    radius * Math.sin(phi) * Math.cos(theta),
-    radius * Math.cos(phi),
-    radius * Math.sin(phi) * Math.sin(theta)
-  )
-
-  return vector
-}
-
 export default class OrchardLane {
-  constructor(threeScene) {
+  constructor(threeScene, config) {
     /*************
         init
     *************/
-    threeScene.start()
-
-    threeScene.scene.setHandlers({
-      onWallClicked: mesh => {
-        if (mesh) {
-          if (mesh.object.userData && mesh.object.userData.videoId) {
-            const totalFaces = mesh.object.geometry.faces.length
-
-            VideoModel.state.updatePlaylistModel({
-              videoIndex: getVideoIndexInPlaylistByVideoId(
-                VideoModel.state,
-                mesh.object.userData.videoId
-              ),
-            })
-
-            /*ThreeModel.updateValue(
-              "faceIndex",
-              Math.floor(mesh.faceIndex / totalFaces)
-            )
-            VideoModel.updateValue(
-              "videoId",
-              mesh.object.userData.videoId
-            )*/
-          }
-        }
-      },
-    })
-
-    threeScene.scene.updateConfig({
-      initialRotation: VideoModel.playbackModel.initialRotation,
-    })
-
+    this.threeScene = threeScene
     const { scene } = threeScene.scene.renderingContext
     const material = new THREE.MeshBasicMaterial({
       color: 0xff0000,
       side: THREE.DoubleSide,
     })
 
+    threeScene.start()
+
+    threeScene.scene.setHandlers({
+      onWallClicked: config.get("noWalls")
+        ? noop
+        : mesh => {
+            if (mesh) {
+              if (
+                mesh.object.userData &&
+                mesh.object.userData.videoId
+              ) {
+                const totalFaces = mesh.object.geometry.faces.length
+
+                VideoModel.state.updatePlaylistModel({
+                  videoIndex: getVideoIndexInPlaylistByVideoId(
+                    VideoModel.state,
+                    mesh.object.userData.videoId
+                  ),
+                })
+              }
+            }
+          },
+    })
+
+    threeScene.scene.updateConfig({
+      hotspots: [...ThreeModel.store.activePlaybackModel.hotspots],
+      initialRotation: VideoModel.playbackModel.initialRotation,
+    })
+    threeScene.scene.hotspots.createHotspots()
+
     /*************
         walls
     *************/
-    var group = new THREE.Group()
-    scene.add(group)
 
-    const floor = Floor()
-    floor.rotateX(Math.PI / 2)
-    floor.position.y = -3
-    group.add(floor)
-    const walls = Walls(ThreeModel.mapData.get("wallData")).map(
-      ({ mesh }) => {
-        group.add(mesh)
-      }
-    )
+    if (!config.get("noWalls")) {
+      this._setupWalls()
+    }
 
     /*************
      update
     *************/
     ThreeModel.on("update", () => {
-      const { previousPlotterPoint, currentPlotterPoint } = ThreeModel
+      const {
+        previousPlotterPoint,
+        state,
+        store,
+        currentPlotterPoint,
+      } = ThreeModel
 
       const angleDifference =
         previousPlotterPoint.angle - currentPlotterPoint.angle
@@ -99,13 +81,18 @@ export default class OrchardLane {
       )
 
       if (currentPlotterPoint) {
-        group.position.x = -currentPlotterPoint.y
-        group.position.y = -4
-        group.position.z = -currentPlotterPoint.x
+        this._updateWalls(currentPlotterPoint)
+      }
+
+      if (state.hasUpdated) {
+        threeScene.scene.updateConfig({
+          hotspots: [...store.activePlaybackModel.hotspots],
+        })
+        threeScene.scene.hotspots.createHotspots()
       }
     })
 
-    VideoModel.observable.on("videoId", (value, prev) => {
+    /*    VideoModel.observable.on("videoId", (value, prev) => {
       const { currentVideoModelData } = VideoModel
       console.log(
         "currentVideoModelData.initialRotation",
@@ -118,8 +105,6 @@ export default class OrchardLane {
 
     ThreeModel.state.on("plotterProgress", (value, prev) => {
       const { previousPlotterPoint, currentPlotterPoint } = ThreeModel
-
-      console.log(currentPlotterPoint)
 
       const angleDifference =
         previousPlotterPoint.angle - currentPlotterPoint.angle
@@ -138,6 +123,33 @@ export default class OrchardLane {
       //threeScene.scene.updateConfig({
       //cameraPosition: cameraPosition,
       //})
-    })
+    })*/
+  }
+
+  get scene() {
+    return threeScene.scene.renderingContext.scene
+  }
+
+  _setupWalls() {
+    this.wallGroup = new THREE.Group()
+    this.scene.add(this.wallGroup)
+
+    const floor = Floor()
+    floor.rotateX(Math.PI / 2)
+    floor.position.y = -3
+    this.wallGroup.add(floor)
+    const walls = Walls(ThreeModel.mapData.get("wallData")).map(
+      ({ mesh }) => {
+        this.wallGroup.add(mesh)
+      }
+    )
+  }
+
+  _updateWalls(currentPlotterPoint) {
+    if (this.wallGroup) {
+      this.wallGroup.position.x = -currentPlotterPoint.y
+      this.wallGroup.position.y = -4
+      this.wallGroup.position.z = -currentPlotterPoint.x
+    }
   }
 }

@@ -1,0 +1,135 @@
+[
+    {
+        "videoId": "yiTHpe33Fy0",
+        "url": "https://r1---sn-o097znld.googlevideo.com/videoplayback?mime=video%2Fmp4&itag=264&expire=1516195227&lmt=1499039770670095&clen=45843868&source=youtube&keepalive=yes&ip=2600%3A1700%3A5b20%3A6ae0%3A68e4%3A5be%3Ad182%3Aa663&key=yt6&aitags=133%2C134%2C135%2C136%2C137%2C160%2C242%2C243%2C244%2C247%2C248%2C264%2C266%2C271%2C278%2C313&mn=sn-o097znld&mm=31&ms=au&ipbits=0&mv=m&pl=43&mt=1516173485&signature=5E200B3BA33F781F17679235CB31213C6008E488.8400D5CEFF17742E74FED7C1CE44EE67C1D930A7&sparams=aitags%2Cclen%2Cdur%2Cei%2Cgir%2Cid%2Cinitcwndbps%2Cip%2Cipbits%2Citag%2Ckeepalive%2Clmt%2Cmime%2Cmm%2Cmn%2Cms%2Cmv%2Cpl%2Crequiressl%2Csource%2Cexpire&requiressl=yes&id=o-AJHsAdsZFfVPDtLXzIbgbYXheNJ9zYn4Qt853_2eo0Ec&ei=O_leWseALIu8-APt8Y_ICg&gir=yes&dur=48.882&initcwndbps=861250&ratebypass=yes\n",
+        "codecs": "avc1.640032\",itag=27",
+        "itag": "264",
+        "indexRange": "0-946",
+        "sidx": {
+            "version": 0,
+            "timescale": 90000,
+            "earliestPresentationTime": 0,
+            "firstOffset": 947,
+            "referenceCount": 9,
+            "references": [
+                {
+                    "size": 5751815,
+                    "type": 0,
+                    "offset": 947,
+                    "duration": 480480,
+                    "time": 0,
+                    "timescale": 90000,
+                    "mediaRange": "947-5752761",
+                    "startRange": 947,
+                    "endRange": 5752761,
+                    "durationSec": 5.338666666666667,
+                    "startTimeSec": 0
+                },
+                {
+                    "size": 4940472,
+                    "type": 0,
+                    "offset": 5752762,
+                    "duration": 480480,
+                    "time": 480480,
+                    "timescale": 90000,
+                    "mediaRange": "5752762-10693233",
+                    "startRange": 5752762,
+                    "endRange": 10693233,
+                    "durationSec": 5.338666666666667,
+                    "startTimeSec": 5.338666666666667
+                },
+                {
+                    "size": 5618201,
+                    "type": 0,
+                    "offset": 10693234,
+                    "duration": 480480,
+                    "time": 960960,
+                    "timescale": 90000,
+                    "mediaRange": "10693234-16311434",
+                    "startRange": 10693234,
+                    "endRange": 16311434,
+                    "durationSec": 5.338666666666667,
+                    "startTimeSec": 10.677333333333333
+                },
+                {
+                    "size": 5088629,
+                    "type": 0,
+                    "offset": 16311435,
+                    "duration": 480480,
+                    "time": 1441440,
+                    "timescale": 90000,
+                    "mediaRange": "16311435-21400063",
+                    "startRange": 16311435,
+                    "endRange": 21400063,
+                    "durationSec": 5.338666666666667,
+                    "startTimeSec": 16.016
+                },
+                {
+                    "size": 4753938,
+                    "type": 0,
+                    "offset": 21400064,
+                    "duration": 480480,
+                    "time": 1921920,
+                    "timescale": 90000,
+                    "mediaRange": "21400064-26154001",
+                    "startRange": 21400064,
+                    "endRange": 26154001,
+                    "durationSec": 5.338666666666667,
+                    "startTimeSec": 21.354666666666667
+                },
+                {
+                    "size": 4392936,
+                    "type": 0,
+                    "offset": 26154002,
+                    "duration": 480480,
+                    "time": 2402400,
+                    "timescale": 90000,
+                    "mediaRange": "26154002-30546937",
+                    "startRange": 26154002,
+                    "endRange": 30546937,
+                    "durationSec": 5.338666666666667,
+                    "startTimeSec": 26.69333333333333
+                },
+                {
+                    "size": 3770370,
+                    "type": 0,
+                    "offset": 30546938,
+                    "duration": 480480,
+                    "time": 2882880,
+                    "timescale": 90000,
+                    "mediaRange": "30546938-34317307",
+                    "startRange": 30546938,
+                    "endRange": 34317307,
+                    "durationSec": 5.338666666666667,
+                    "startTimeSec": 32.032
+                },
+                {
+                    "size": 5118384,
+                    "type": 0,
+                    "offset": 34317308,
+                    "duration": 480480,
+                    "time": 3363360,
+                    "timescale": 90000,
+                    "mediaRange": "34317308-39435691",
+                    "startRange": 34317308,
+                    "endRange": 39435691,
+                    "durationSec": 5.338666666666667,
+                    "startTimeSec": 37.370666666666665
+                },
+                {
+                    "size": 6408176,
+                    "type": 0,
+                    "offset": 39435692,
+                    "duration": 555555,
+                    "time": 3843840,
+                    "timescale": 90000,
+                    "mediaRange": "39435692-45843867",
+                    "startRange": 39435692,
+                    "endRange": 45843867,
+                    "durationSec": 6.172833333333333,
+                    "startTimeSec": 42.70933333333333
+                }
+            ]
+        }
+    }
+]

@@ -32,6 +32,11 @@
   "videoData": {
     "R4-XIR7b-Qo": {
       "initialRotation": 180,
+      "hotspots": [
+      {
+        "videoId": "3DC9Y2BqyuU",
+        "label": "outside"
+      }],
       "startTime": 39,
       "endTime": 701
     },

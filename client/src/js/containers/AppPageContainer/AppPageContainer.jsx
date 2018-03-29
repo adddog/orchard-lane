@@ -6,8 +6,6 @@ import Q from "bluebird"
 
 import OrchardLane from "./orchard"
 
-import styles from "./AppPageContainer.css"
-
 export default class AppPageContainer extends Component {
   static propTypes = {
     general: PropTypes.object.isRequired,
@@ -25,10 +23,11 @@ export default class AppPageContainer extends Component {
       updatePlaylistModel: props.updatePlaylistModel,
       updatePlaybackModel: props.updatePlaybackModel,
       activePlaybackModel: props.activePlaybackModel,
+      hotspotFontJSON: props.hotspotFontJSON,
       mapData: props.mapData,
       videoModel: props.videoModel,
       containerEl: this.refs.three,
-      config: props.config
+      config: props.config,
     }
   }
 
@@ -65,13 +64,10 @@ export default class AppPageContainer extends Component {
     return (
       <main
         data-ui-ref="AppContentContainer"
-        className={classnames(styles.root)}
       >
         <div
           ref="three"
           className={classnames([
-            styles.root,
-            "u-container full u-flex",
           ])}
           data-ui-ref="AppContent"
         />
