@@ -19,10 +19,6 @@ export default class OrchardLane {
     *************/
     this.threeScene = threeScene
     const { scene } = threeScene.scene.renderingContext
-    const material = new THREE.MeshBasicMaterial({
-      color: 0xff0000,
-      side: THREE.DoubleSide,
-    })
 
     threeScene.start()
 
@@ -47,12 +43,11 @@ export default class OrchardLane {
             }
           },
     })
-
     threeScene.scene.updateConfig({
-      hotspots: [...ThreeModel.store.activePlaybackModel.hotspots],
-      initialRotation: VideoModel.playbackModel.initialRotation,
+      // hotspots: [...ThreeModel.store.activePlaybackModel.hotspots],
+      //initialRotation: VideoModel.playbackModel.initialRotation,
     })
-    threeScene.scene.hotspots.createHotspots()
+    //threeScene.scene.hotspots.createHotspots()
 
     /*************
         walls
